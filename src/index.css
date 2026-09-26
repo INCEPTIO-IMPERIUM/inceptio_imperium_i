@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* Dark mode: follows the OS by default; force with class="dark" or class="light" on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+ * Design system — Imperium
+ * Brand anchors: #2B3153 navy · #505870 slate · #86939B steel · #EFEFEF mist
+ * ------------------------------------------------------------------ */
+
+@theme {
+  /* Brand palette (anchors marked ★) */
+  --color-imperium-50: #f7f7f8;
+  --color-imperium-100: #efefef; /* ★ mist */
+  --color-imperium-200: #dadde1;
+  --color-imperium-300: #bcc3c9;
+  --color-imperium-400: #86939b; /* ★ steel */
+  --color-imperium-500: #6b7585;
+  --color-imperium-600: #505870; /* ★ slate */
+  --color-imperium-700: #3d4462;
+  --color-imperium-800: #2b3153; /* ★ navy */
+  --color-imperium-900: #1e2340;
+  --color-imperium-950: #13162b;
+
+  --color-navy: #2b3153;
+  --color-slate: #505870;
+  --color-steel: #86939b;
+  --color-mist: #efefef;
+
+  /* Status colors, tuned to sit with the muted palette */
+  --color-success: #3f7a5f;
+  --color-warning: #a8742a;
+  --color-danger: #a8443f;
+
+  /* Typography */
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  --text-display: 3.75rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 700;
+
+  --text-h1: 2.75rem;
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 600;
+
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 600;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.04em;
+  --text-caption--font-weight: 500;
+
+  /* Shape & depth (shadows are navy-tinted, never pure black) */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --shadow-sm: 0 1px 2px rgb(43 49 83 / 0.06), 0 1px 3px rgb(43 49 83 / 0.08);
+  --shadow-md: 0 4px 12px -2px rgb(43 49 83 / 0.1), 0 2px 4px -2px rgb(43 49 83 / 0.08);
+  --shadow-lg: 0 16px 40px -8px rgb(43 49 83 / 0.18), 0 6px 12px -6px rgb(43 49 83 / 0.1);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Semantic tokens → Tailwind utilities (bg-background, text-foreground, border-border, …) */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: var(--color-imperium-100);
+  --surface: #ffffff;
+  --surface-raised: var(--color-imperium-50);
+  --foreground: var(--color-imperium-800);
+  --muted: var(--color-imperium-200);
+  --muted-foreground: var(--color-imperium-600);
+  --border: var(--color-imperium-200);
+  --primary: var(--color-imperium-800);
+  --primary-hover: var(--color-imperium-700);
+  --primary-foreground: var(--color-imperium-100);
+  --secondary: var(--color-imperium-200);
+  --secondary-foreground: var(--color-imperium-800);
+  --accent: var(--color-imperium-400);
+  --ring: var(--color-imperium-500);
+  color-scheme: light;
+}
+
+.dark {
+  --background: var(--color-imperium-950);
+  --surface: var(--color-imperium-900);
+  --surface-raised: var(--color-imperium-800);
+  --foreground: var(--color-imperium-100);
+  --muted: var(--color-imperium-800);
+  --muted-foreground: var(--color-imperium-400);
+  --border: var(--color-imperium-700);
+  --primary: var(--color-imperium-100);
+  --primary-hover: var(--color-imperium-200);
+  --primary-foreground: var(--color-imperium-800);
+  --secondary: var(--color-imperium-700);
+  --secondary-foreground: var(--color-imperium-100);
+  --accent: var(--color-imperium-400);
+  --ring: var(--color-imperium-400);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: var(--color-imperium-950);
+    --surface: var(--color-imperium-900);
+    --surface-raised: var(--color-imperium-800);
+    --foreground: var(--color-imperium-100);
+    --muted: var(--color-imperium-800);
+    --muted-foreground: var(--color-imperium-400);
+    --border: var(--color-imperium-700);
+    --primary: var(--color-imperium-100);
+    --primary-hover: var(--color-imperium-200);
+    --primary-foreground: var(--color-imperium-800);
+    --secondary: var(--color-imperium-700);
+    --secondary-foreground: var(--color-imperium-100);
+    --accent: var(--color-imperium-400);
+    --ring: var(--color-imperium-400);
+    color-scheme: dark;
+  }
+}
+
+/* The four-corner mesh gradient from the brand swatch */
+@utility bg-mesh {
+  background-color: var(--color-imperium-500);
+  background-image:
+    radial-gradient(at 0% 0%, var(--color-navy) 0, transparent 60%),
+    radial-gradient(at 100% 0%, var(--color-steel) 0, transparent 60%),
+    radial-gradient(at 0% 100%, var(--color-mist) 0, transparent 55%),
+    radial-gradient(at 100% 100%, var(--color-slate) 0, transparent 60%);
+}
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-navy) 0%,
+    var(--color-slate) 50%,
+    var(--color-steel) 100%
+  );
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-body text-foreground;
+  }
+
+  h1 { @apply text-h1; }
+  h2 { @apply text-h2; }
+  h3 { @apply text-h3; }
+  h4 { @apply text-h4; }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  ::selection {
+    @apply bg-imperium-300 text-imperium-900;
+  }
+}
