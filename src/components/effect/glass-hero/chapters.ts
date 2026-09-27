@@ -47,15 +47,23 @@ export interface ChapterPose {
   rim: number
   /** Thin-film iridescence weight, applied at grazing angles only. */
   irid: number
+  /** 0 = house steel/mist studio, 1 = full soap-bubble color (film, violet/cyan lights, blue glow). */
+  color: number
+  /** Slow organic surface wobble, as a fraction of the shape's thickness. */
+  wobble: number
 }
 
 export interface Chapter {
   id: string
   label: string
+  /** A quiet mincho mark beside the counter. */
+  kanji: string
   /** The huge, faint word drawn behind the object. */
   word: string
   title: string[]
   body: string
+  /** A short, labelled list under the body. */
+  details?: { label: string; items: string[] }
   hint?: { pointer: string; touch: string }
   /** Where the text sits on wide screens; on phones it is always anchored to the bottom. */
   align: 'left' | 'right' | 'center'
@@ -67,10 +75,11 @@ const SPHERE: ShapeParams = { stretch: 1, twist: 0, R: 0, a: 0.8, b: 0.8, ring2:
 export const CHAPTERS: Chapter[] = [
   {
     id: 'space',
-    label: 'Space',
+    label: 'About',
+    kanji: '間',
     word: 'ma',
-    title: ['Interfaces that', 'give attention back.'],
-    body: 'Inceptio Imperium designs and builds calm digital products for teams that care about the last pixel.',
+    title: ['A small studio', 'for quiet software.'],
+    body: 'Inceptio Imperium designs and builds digital products that give attention back instead of taking it.',
     hint: { pointer: 'Scroll to begin, or move over the glass.', touch: 'Scroll to begin, or tap the glass.' },
     align: 'left',
     pose: {
@@ -83,14 +92,18 @@ export const CHAPTERS: Chapter[] = [
       disc: 0,
       rim: 0.15,
       irid: 0.6,
+      color: 1,
+      wobble: 0.07,
     },
   },
   {
     id: 'motion',
-    label: 'Motion',
+    label: 'Craft',
+    kanji: '動',
     word: 'dō',
-    title: ['Motion that', 'leads the eye.'],
-    body: 'Nothing moves unless it guides attention or answers your touch. Every transition carries meaning.',
+    title: ['Design and code', 'in one pair of hands.'],
+    body: 'The people who shape an interface also write it, so nothing is lost between the idea and what ships.',
+    details: { label: 'What we make', items: ['Interfaces', 'Motion', 'Design systems'] },
     hint: { pointer: 'Scroll faster and the glass stretches.', touch: 'Swipe faster and the glass stretches.' },
     align: 'right',
     pose: {
@@ -103,14 +116,17 @@ export const CHAPTERS: Chapter[] = [
       disc: 0,
       rim: 0.2,
       irid: 0.7,
+      color: 0.85,
+      wobble: 0,
     },
   },
   {
     id: 'restraint',
     label: 'Restraint',
+    kanji: '簡素',
     word: 'kanso',
-    title: ['Reduced to', 'what matters.'],
-    body: 'We remove until one surface remains, then refine it until nothing on it is accidental.',
+    title: ['Fewer things,', 'finished properly.'],
+    body: 'We take on a few projects at a time and carry each one to the last pixel, the last state and the last millisecond.',
     align: 'left',
     pose: {
       desktop: { x: 0.8, y: -0.04, size: 1.45 },
@@ -122,14 +138,18 @@ export const CHAPTERS: Chapter[] = [
       disc: 1,
       rim: 0.2,
       irid: 0.45,
+      color: 0.55,
+      wobble: 0,
     },
   },
   {
     id: 'stillness',
-    label: 'Stillness',
+    label: 'Principles',
+    kanji: '静',
     word: 'sei',
-    title: ['Space is part', 'of the design.'],
-    body: 'The gap between two rings is as deliberate as the rings. Emptiness is placed, weighed and given a purpose.',
+    title: ['Built on ma,', 'the space between.'],
+    body: 'Negative space is placed, weighed and given a purpose. The gap between two rings matters as much as the rings.',
+    details: { label: 'We work by', items: ['Ma', 'Kanso', 'Dō', 'Sei'] },
     hint: { pointer: 'Click a ring to send a ripple. The center stays empty.', touch: 'Tap a ring to send a ripple. The center stays empty.' },
     align: 'right',
     pose: {
@@ -142,11 +162,14 @@ export const CHAPTERS: Chapter[] = [
       disc: 0,
       rim: 1,
       irid: 0.8,
+      color: 0.8,
+      wobble: 0,
     },
   },
   {
     id: 'contact',
     label: 'Contact',
+    kanji: '話',
     word: 'hello',
     title: ['Start with', 'a conversation.'],
     body: 'Thirty unhurried minutes. Bring a question, not a brief.',
@@ -161,6 +184,8 @@ export const CHAPTERS: Chapter[] = [
       disc: 0,
       rim: 0.8,
       irid: 0.7,
+      color: 0.9,
+      wobble: 0,
     },
   },
 ]

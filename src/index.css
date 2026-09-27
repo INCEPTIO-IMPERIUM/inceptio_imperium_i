@@ -219,3 +219,19 @@
     cursor: pointer;
   }
 }
+
+/* Glass hero page: the scroll hint's slow fall. Stops under reduced motion. */
+@keyframes glass-hero-fall {
+  from { transform: translateY(-20px); }
+  to { transform: translateY(56px); }
+}
+
+.glass-hero-scroll-hint {
+  animation: glass-hero-fall 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-hero-scroll-hint {
+    animation: none;
+  }
+}

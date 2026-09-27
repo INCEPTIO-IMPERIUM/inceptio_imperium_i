@@ -342,7 +342,7 @@ export class GlassHeroApp {
     sh.tube2 = lerp(Math.min(s.a, s.b), s.ring2Tube, s.ring2)
     sh.tilt2 = s.ring2 * s.ring2Tilt
     this.thick = s.ring2 > 0.5 ? Math.min(s.a, s.b, sh.tube2) : Math.min(s.a, s.b)
-    const localBound = Math.max(Math.hypot(Math.max(1, s.stretch) * (s.R + s.a), s.b), sh.R2 + sh.tube2) + this.thick * 0.3
+    const localBound = Math.max(Math.hypot(Math.max(1, s.stretch) * (s.R + s.a), s.b), sh.R2 + sh.tube2) + this.thick * (0.3 + pose.wobble * 1.6)
     this.bound = localBound * scale * (1 + Math.abs(squash)) + 0.08 * scale + 0.05
 
     /* Pointer: shape-aware hit test mirrors the shader's SDF. */
@@ -417,6 +417,8 @@ export class GlassHeroApp {
     u.uDiscW.value = pose.disc
     u.uRimW.value = pose.rim
     u.uIrid.value = pose.irid
+    u.uColor.value = pose.color
+    u.uWobble.value = pose.wobble * (reduced ? 0.3 : 1)
     u.uIntro.value = reduced ? this.introFade : this.introFade * clamp(introScale * 4)
 
     this.cursor.update(dt, p, over, reduced)

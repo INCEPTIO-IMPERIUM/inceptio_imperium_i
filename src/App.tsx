@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import About from './page/About'
 import DesignSystem from './page/DesignSystem'
-import Experience from './page/Experience'
 import Homepage from './page/Homepage'
 
 const DESIGN_HASH = '#design-system'
-const EXPERIENCE_HASH = '#experience'
+// '#experience' was the page's first address; keep it working.
+const ABOUT_HASHES = ['#about', '#experience']
 
 function App() {
   const [hash, setHash] = useState(() => window.location.hash)
@@ -16,7 +17,7 @@ function App() {
   }, [])
 
   if (hash === DESIGN_HASH) return <DesignSystem />
-  if (hash === EXPERIENCE_HASH) return <Experience />
+  if (ABOUT_HASHES.includes(hash)) return <About />
   return <Homepage />
 }
 

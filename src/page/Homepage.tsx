@@ -32,6 +32,7 @@ const NAV_LINKS = [
   { label: 'Philosophy', href: '#philosophy' },
   { label: 'Work', href: '#work' },
   { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '#about' },
 ]
 
 const MANIFESTO =
@@ -632,11 +633,6 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
               </a>
             </li>
           ))}
-          <li>
-            <a href="#experience" className="transition-colors duration-500 hover:text-mist">
-              Experience
-            </a>
-          </li>
           <li>
             <a href="#design-system" className="transition-colors duration-500 hover:text-mist">
               System

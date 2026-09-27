@@ -78,12 +78,19 @@ uniform float uWordH;
 uniform float uDiscW;
 uniform float uRimW;
 uniform float uIrid;
+uniform float uColor;
+uniform float uWobble;
 uniform float uIntro;
 uniform float uGlow;
 
 const float IOR = 1.47;
 const float DISPERSION = 0.045;
 const float PLANE_Z = -4.0;
+
+// Bubble palette (linear), only reached through uColor.
+const vec3 VIOLET = vec3(0.32, 0.1, 0.95);
+const vec3 CYAN = vec3(0.08, 0.62, 0.95);
+const vec3 GLOW_BLUE = vec3(0.06, 0.2, 0.8);
 
 /* ---------------- shape ---------------- */
 
@@ -114,6 +121,14 @@ float shapeBase(vec3 p) {
 
 float mapLocal(vec3 p) {
   float d = shapeBase(p);
+
+  // Organic, low-frequency wobble so the bubble breathes; sized to the thickness.
+  if (uWobble > 0.0) {
+    float t = uDrift;
+    float w = sin(p.x * 2.3 + t * 0.7) * sin(p.y * 2.9 - t * 0.55) * sin(p.z * 2.1 + t * 0.62)
+            + 0.5 * sin(p.x * 3.7 - p.z * 2.4 + t * 0.9);
+    d -= uWobble * uThick * w;
+  }
 
   // Pointer proximity: a soft bulge toward the cursor, sized to the thickness.
   vec3 dp = p - uPtrPos;
@@ -176,8 +191,10 @@ vec3 studio(vec3 rd) {
   d.xz = mat2(cos(a), sin(a), -sin(a), cos(a)) * d.xz;
   vec3 col = mix(uBg * 0.5, uBg * 2.4, smoothstep(-0.5, 0.9, d.y));
   col += uKeyCol * 2.4 * softbox(d, normalize(vec3(-0.45, 0.62, 0.64)), vec3(0.0, 1.0, 0.0), vec2(0.55, 0.32), 0.9);
-  col += uStripCol * 2.2 * softbox(d, normalize(vec3(0.95, 0.05, 0.3)), vec3(0.0, 1.0, 0.0), vec2(0.07, 1.1), 0.6);
-  col += uRimCol * 1.6 * softbox(d, normalize(vec3(-0.1, 0.3, -1.0)), vec3(0.0, 1.0, 0.0), vec2(1.3, 0.06), 0.65);
+  col += mix(uStripCol, VIOLET * 2.0, uColor) * 2.2 * softbox(d, normalize(vec3(0.95, 0.05, 0.3)), vec3(0.0, 1.0, 0.0), vec2(0.07, 1.1), 0.6);
+  col += mix(uRimCol, CYAN * 1.6, uColor) * 1.6 * softbox(d, normalize(vec3(-0.1, 0.3, -1.0)), vec3(0.0, 1.0, 0.0), vec2(1.3, 0.06), 0.65);
+  // A low cyan fill that only exists in bubble color.
+  col += CYAN * 1.8 * uColor * softbox(d, normalize(vec3(0.7, -0.55, 0.45)), vec3(0.0, 1.0, 0.0), vec2(0.35, 0.12), 0.7);
   return col;
 }
 
@@ -219,10 +236,17 @@ vec3 shade(vec3 p, vec3 rd, float t) {
 
   // Reflection, tinted by thin-film interference at grazing angles only.
   vec3 refl = studio(reflect(rd, n));
-  float film = 0.55 + 0.25 * sin(dot(p, vec3(2.3, 1.7, 1.1)) * 2.0 / uObjScale + uDrift * 0.25);
-  vec3 filmCol = 0.5 + 0.5 * cos(6.2831 * (film * (2.2 - cosi) + vec3(0.0, 0.33, 0.67)));
+  // Thin-film interference: optical path varies with film thickness (swirling) and angle;
+  // per-channel wavelengths give the soap-bubble bands.
+  vec3 pl0 = toLocal(p);
+  float swirl = sin(pl0.y * 3.1 + sin(pl0.x * 2.2 + uDrift * 0.3) * 1.6 + uDrift * 0.2)
+              + 0.5 * sin(pl0.z * 4.3 - pl0.y * 1.7 - uDrift * 0.25);
+  float thickness = 1.1 + 0.45 * swirl;
+  float cosT = sqrt(max(1.0 - (1.0 - cosi * cosi) / (1.33 * 1.33), 0.0));
+  vec3 filmCol = 0.5 + 0.5 * cos(6.2831 * thickness * cosT * vec3(1.0, 1.23, 1.48) * 1.6 + 3.1416);
   float edge = (1.0 - cosi) * (1.0 - cosi);
-  refl *= mix(vec3(1.0), 0.35 + filmCol * 1.3, uIrid * edge);
+  float filmW = uIrid * mix(edge, 0.12 + 0.88 * edge, uColor);
+  refl *= mix(vec3(1.0), 0.3 + filmCol * 1.4, filmW);
 
   // Refraction in, march inside the SDF to the exit, disperse on the way out.
   vec3 rd1 = refract(rd, n, 1.0 / IOR);
@@ -254,6 +278,9 @@ vec3 shade(vec3 p, vec3 rd, float t) {
   refr *= exp(-vec3(0.55, 0.42, 0.22) * ti / uObjScale);
 
   vec3 col = mix(refr, refl, F);
+
+  // Bubble: a rainbow band hugging the silhouette.
+  col += filmCol * pow(1.0 - cosi, 3.0) * uColor * 0.42;
 
   // Colored rim for the rings.
   col += uRimCol * pow(1.0 - cosi, 3.0) * uRimW * 1.4;
@@ -321,8 +348,11 @@ void main() {
     }
 
     // Tight, quiet glow hugging the silhouette.
-    float glowK = uGlow * exp(-max(dmin, 0.0) / (0.05 * uObjScale + 0.02));
-    col += uHazeCol * glowK;
+    // Fade out well before the bounding sphere so the glow never shows its edge.
+    float rayDist = sqrt(max(dot(oc, oc) - b * b, 0.0));
+    float glowFade = 1.0 - smoothstep(0.78 * uBound, 0.98 * uBound, rayDist);
+    float glowK = uGlow * glowFade * exp(-max(dmin, 0.0) / (0.028 * uObjScale + 0.015));
+    col += mix(uHazeCol, GLOW_BLUE * 0.9, uColor) * glowK * (1.0 + uColor * 0.35);
 
     // Analytic coverage: blend the surface in over one pixel of closest approach.
     float cov = hit ? 1.0 : clamp(1.25 - rmin, 0.0, 1.0);

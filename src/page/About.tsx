@@ -5,7 +5,7 @@ import { CHAPTERS, PRIMARY_ACTION, type Chapter } from '../components/effect/gla
 import { cn } from '../lib/cn'
 
 /*
- * Inceptio Imperium — a scroll-told reveal around one glass object.
+ * About Inceptio Imperium — the studio told in five chapters around one glass object.
  * The object is the only bold thing on the page; everything around it
  * stays quiet: real DOM text, hairlines, the house palette.
  */
@@ -33,7 +33,7 @@ function PrimaryAction({ onConfirm, className }: { onConfirm: () => void; classN
   )
 }
 
-export default function Experience() {
+export default function About() {
   const rootRef = useRef<HTMLDivElement>(null)
   const hostRef = useRef<HTMLDivElement>(null)
   const sectionRefs = useRef<HTMLElement[]>([])
@@ -69,6 +69,14 @@ export default function Experience() {
     return () => {
       app.dispose()
       appRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const previous = document.title
+    document.title = 'About — Inceptio Imperium'
+    return () => {
+      document.title = previous
     }
   }, [])
 
@@ -120,6 +128,15 @@ export default function Experience() {
               <span className="sm:hidden">II</span>
             </a>
             <div className="flex items-center gap-1">
+              <a
+                href="#"
+                className="hidden whitespace-nowrap rounded-full px-3 py-2 text-small text-steel transition-colors duration-500 hover:text-mist md:inline-block"
+              >
+                Home
+              </a>
+              <span aria-current="page" className="hidden whitespace-nowrap rounded-full px-3 py-2 text-small text-mist md:inline-block">
+                About
+              </span>
               <button
                 type="button"
                 onClick={toggleSound}
@@ -162,9 +179,18 @@ export default function Experience() {
                 data-chapter={i}
                 className={cn('fixed inset-x-0 bottom-0 z-10 px-6 pb-[max(2.5rem,env(safe-area-inset-bottom))] pr-14', LAYOUT[chapter.align])}
               >
-                <p data-line="soft" style={{ opacity: 0 }} className="font-mono text-caption tracking-[0.2em] text-slate">
-                  {pad(i + 1)} — {pad(CHAPTERS.length)}
-                  <span className="text-steel"> · {chapter.label}</span>
+                <p
+                  data-line="soft"
+                  style={{ opacity: 0 }}
+                  className={cn('flex items-baseline gap-4', chapter.align === 'center' && 'md:justify-center')}
+                >
+                  <span aria-hidden className="font-mincho text-body text-steel/70">
+                    {chapter.kanji}
+                  </span>
+                  <span className="font-mono text-caption tracking-[0.2em] text-slate">
+                    {pad(i + 1)} — {pad(CHAPTERS.length)}
+                    <span className="text-steel"> · {chapter.label}</span>
+                  </span>
                 </p>
                 <h2
                   id={`chapter-${chapter.id}`}
@@ -182,12 +208,22 @@ export default function Experience() {
                   data-line="soft"
                   style={{ opacity: 0 }}
                   className={cn(
-                    'mt-6 max-w-[40ch] text-body font-light leading-relaxed text-imperium-300 sm:text-h4 sm:font-light sm:leading-relaxed',
+                    'mt-6 max-w-[40ch] text-pretty text-body font-light leading-relaxed text-imperium-300 sm:text-h4 sm:font-light sm:leading-relaxed',
                     chapter.align === 'center' && 'md:mx-auto',
                   )}
                 >
                   {chapter.body}
                 </p>
+                {chapter.details && (
+                  <div data-line="soft" style={{ opacity: 0 }} className="mt-8 border-t border-white/10 pt-5">
+                    <p className="font-mono text-caption tracking-[0.2em] text-steel">{chapter.details.label}</p>
+                    <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-small font-light text-imperium-200">
+                      {chapter.details.items.map(item => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 {chapter.hint && (
                   <p data-line="soft" style={{ opacity: 0 }} className="mt-8 text-small font-light text-imperium-400">
                     <span className="[@media(pointer:coarse)]:hidden">{chapter.hint.pointer}</span>
@@ -211,6 +247,13 @@ export default function Experience() {
           )
         })}
       </main>
+
+      {/* Scroll hint: belongs to the first chapter, leaves with it. */}
+      <div data-chapter={0} aria-hidden className="pointer-events-none fixed inset-x-0 bottom-8 z-10 hidden justify-center md:flex">
+        <span data-line="soft" style={{ opacity: 0 }} className="relative block h-14 w-px overflow-hidden bg-white/10">
+          <span className="glass-hero-scroll-hint absolute inset-x-0 top-0 h-5 bg-mist/70" />
+        </span>
+      </div>
 
       {/* Chapter rail: progress and direct jumps. */}
       <nav aria-label="Chapters" className="fixed right-3 top-1/2 z-30 -translate-y-1/2 sm:right-8">

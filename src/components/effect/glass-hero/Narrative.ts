@@ -11,6 +11,8 @@ export interface Pose {
   disc: number
   rim: number
   irid: number
+  color: number
+  wobble: number
   wordA: number
   wordB: number
   wordMix: number
@@ -46,6 +48,8 @@ export class Narrative {
       disc: p.disc,
       rim: p.rim,
       irid: p.irid,
+      color: p.color,
+      wobble: p.wobble,
       wordA: 0,
       wordB: 0,
       wordMix: 0,
@@ -85,6 +89,8 @@ export class Narrative {
     out.disc = blend(A.disc, B.disc, tf)
     out.rim = blend(A.rim, B.rim, tf)
     out.irid = blend(A.irid, B.irid, tf)
+    out.color = blend(A.color, B.color, tf)
+    out.wobble = blend(A.wobble, B.wobble, tf)
 
     out.wordA = i
     out.wordB = i + 1

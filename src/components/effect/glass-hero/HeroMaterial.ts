@@ -86,6 +86,8 @@ export class HeroMaterial {
       uDiscW: { value: 0 },
       uRimW: { value: 0 },
       uIrid: { value: 0.6 },
+      uColor: { value: 0 },
+      uWobble: { value: 0 },
       uIntro: { value: 0 },
       uGlow: { value: 0.25 },
     }
