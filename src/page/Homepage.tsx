@@ -633,6 +633,11 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
             </li>
           ))}
           <li>
+            <a href="#experience" className="transition-colors duration-500 hover:text-mist">
+              Experience
+            </a>
+          </li>
+          <li>
             <a href="#design-system" className="transition-colors duration-500 hover:text-mist">
               System
             </a>

@@ -207,3 +207,15 @@
     @apply bg-imperium-300 text-imperium-900;
   }
 }
+
+/* Glass hero page: the custom cursor replaces the native one on precise pointers only. */
+@media (hover: hover) and (pointer: fine) {
+  .glass-hero-cursor,
+  .glass-hero-cursor * {
+    cursor: none;
+  }
+
+  .glass-hero-cursor :is(a, button, input, textarea, select, label) {
+    cursor: pointer;
+  }
+}
