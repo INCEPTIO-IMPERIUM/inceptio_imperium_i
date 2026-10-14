@@ -6,27 +6,32 @@
 
 /* ------------------------------------------------------------------
  * Design system — Imperium
- * Brand anchors: #2B3153 navy · #505870 slate · #86939B steel · #EFEFEF mist
+ * Violet-ink neutrals. Anchors: #211A29 navy · #71657C slate · #9A8DA9 steel · #F7F3FB mist
+ * Single accent: #A879FF violet (+ #D4BAFF lilac) — focus, selection, title punctuation only.
  * ------------------------------------------------------------------ */
 
 @theme {
   /* Brand palette (anchors marked ★) */
-  --color-imperium-50: #f7f7f8;
-  --color-imperium-100: #efefef; /* ★ mist */
-  --color-imperium-200: #dadde1;
-  --color-imperium-300: #bcc3c9;
-  --color-imperium-400: #86939b; /* ★ steel */
-  --color-imperium-500: #6b7585;
-  --color-imperium-600: #505870; /* ★ slate */
-  --color-imperium-700: #3d4462;
-  --color-imperium-800: #2b3153; /* ★ navy */
-  --color-imperium-900: #1e2340;
-  --color-imperium-950: #13162b;
+  --color-imperium-50: #fbf9fd;
+  --color-imperium-100: #f7f3fb; /* ★ mist */
+  --color-imperium-200: #d6cce0;
+  --color-imperium-300: #c0b6c8;
+  --color-imperium-400: #9a8da9; /* ★ steel */
+  --color-imperium-500: #82768e;
+  --color-imperium-600: #71657c; /* ★ slate */
+  --color-imperium-700: #362746;
+  --color-imperium-800: #211a29; /* ★ navy */
+  --color-imperium-900: #17131d;
+  --color-imperium-950: #09070c;
 
-  --color-navy: #2b3153;
-  --color-slate: #505870;
-  --color-steel: #86939b;
-  --color-mist: #efefef;
+  --color-navy: #211a29;
+  --color-slate: #71657c;
+  --color-steel: #9a8da9;
+  --color-mist: #f7f3fb;
+
+  /* The one accent — never a fill, never more than one per viewport */
+  --color-violet: #a879ff;
+  --color-lilac: #d4baff;
 
   /* Status colors, tuned to sit with the muted palette */
   --color-success: #3f7a5f;
@@ -75,15 +80,15 @@
   --text-caption--letter-spacing: 0.04em;
   --text-caption--font-weight: 500;
 
-  /* Shape & depth (shadows are navy-tinted, never pure black) */
+  /* Shape & depth (shadows are ink-tinted, never pure black) */
   --radius-sm: 0.375rem;
   --radius-md: 0.625rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
 
-  --shadow-sm: 0 1px 2px rgb(43 49 83 / 0.06), 0 1px 3px rgb(43 49 83 / 0.08);
-  --shadow-md: 0 4px 12px -2px rgb(43 49 83 / 0.1), 0 2px 4px -2px rgb(43 49 83 / 0.08);
-  --shadow-lg: 0 16px 40px -8px rgb(43 49 83 / 0.18), 0 6px 12px -6px rgb(43 49 83 / 0.1);
+  --shadow-sm: 0 1px 2px rgb(33 26 41 / 0.06), 0 1px 3px rgb(33 26 41 / 0.08);
+  --shadow-md: 0 4px 12px -2px rgb(33 26 41 / 0.1), 0 2px 4px -2px rgb(33 26 41 / 0.08);
+  --shadow-lg: 0 16px 40px -8px rgb(33 26 41 / 0.18), 0 6px 12px -6px rgb(33 26 41 / 0.1);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -137,8 +142,8 @@
   --primary-foreground: var(--color-imperium-800);
   --secondary: var(--color-imperium-700);
   --secondary-foreground: var(--color-imperium-100);
-  --accent: var(--color-imperium-400);
-  --ring: var(--color-imperium-400);
+  --accent: var(--color-violet);
+  --ring: var(--color-violet);
   color-scheme: dark;
 }
 
@@ -156,8 +161,8 @@
     --primary-foreground: var(--color-imperium-800);
     --secondary: var(--color-imperium-700);
     --secondary-foreground: var(--color-imperium-100);
-    --accent: var(--color-imperium-400);
-    --ring: var(--color-imperium-400);
+    --accent: var(--color-violet);
+    --ring: var(--color-violet);
     color-scheme: dark;
   }
 }
@@ -204,7 +209,7 @@
   }
 
   ::selection {
-    @apply bg-imperium-300 text-imperium-900;
+    @apply bg-lilac text-imperium-950;
   }
 }
 

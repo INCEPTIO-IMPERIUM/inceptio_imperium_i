@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { heroFragment, heroVertex } from './heroShader'
 import { hexToLinear } from './math'
 
-const PALETTE = { canvas: '#13162B', navy: '#2B3153', slate: '#505870', steel: '#86939B', mist: '#EFEFEF' }
+const PALETTE = { canvas: '#09070C', navy: '#211A29', slate: '#71657C', steel: '#9A8DA9', mist: '#F7F3FB' }
 
 export interface Quality {
   steps: number
@@ -69,7 +69,7 @@ export class HeroMaterial {
       uBg: { value: v3(PALETTE.canvas) },
       uKeyCol: { value: v3(PALETTE.mist) },
       uStripCol: { value: v3(PALETTE.steel, 1.6) },
-      uRimCol: { value: v3(PALETTE.steel, 1.2).add(new THREE.Vector3(0.0, 0.02, 0.08)) },
+      uRimCol: { value: v3(PALETTE.steel, 1.2).add(new THREE.Vector3(0.04, 0.0, 0.08)) },
       uHazeCol: { value: v3(PALETTE.slate, 0.35) },
       uHazePos: { value: new THREE.Vector2() },
       uHazeR: { value: 3 },

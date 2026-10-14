@@ -172,7 +172,7 @@ export default function About() {
               {i === 0 && gl === 'off' && (
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute right-[12vw] top-[50svh] h-[min(32vw,420px)] w-[min(32vw,420px)] -translate-y-1/2 rounded-full border border-white/10 bg-[radial-gradient(circle_at_34%_28%,rgb(239_239_239/0.55)_0%,transparent_14%),radial-gradient(circle_at_68%_76%,rgb(134_147_155/0.28)_0%,transparent_38%),radial-gradient(circle_at_50%_50%,rgb(43_49_83/0.35)_0%,rgb(19_22_43/0.1)_72%)] shadow-[inset_0_0_60px_rgb(134_147_155/0.18),0_0_80px_rgb(80_88_112/0.18)] max-md:left-1/2 max-md:right-auto max-md:top-[26svh] max-md:h-[56vw] max-md:w-[56vw] max-md:-translate-x-1/2"
+                  className="pointer-events-none absolute right-[12vw] top-[50svh] h-[min(32vw,420px)] w-[min(32vw,420px)] -translate-y-1/2 rounded-full border border-white/10 bg-[radial-gradient(circle_at_34%_28%,rgb(247_243_251/0.55)_0%,transparent_14%),radial-gradient(circle_at_68%_76%,rgb(154_141_169/0.28)_0%,transparent_38%),radial-gradient(circle_at_50%_50%,rgb(33_26_41/0.35)_0%,rgb(9_7_12/0.1)_72%)] shadow-[inset_0_0_60px_rgb(154_141_169/0.18),0_0_80px_rgb(113_101_124/0.18)] max-md:left-1/2 max-md:right-auto max-md:top-[26svh] max-md:h-[56vw] max-md:w-[56vw] max-md:-translate-x-1/2"
                 />
               )}
               <div
@@ -321,7 +321,7 @@ export default function About() {
       >
         <svg viewBox="0 0 48 48" className="h-14 w-14 -rotate-90" aria-hidden>
           <circle cx="24" cy="24" r="22" fill="none" stroke="rgb(255 255 255 / 0.08)" strokeWidth="0.75" />
-          <circle ref={arcRef} cx="24" cy="24" r="22" fill="none" stroke="#EFEFEF" strokeWidth="0.75" strokeLinecap="round" />
+          <circle ref={arcRef} cx="24" cy="24" r="22" fill="none" stroke="#F7F3FB" strokeWidth="0.75" strokeLinecap="round" />
         </svg>
         <p ref={stepRef} className="font-mono text-caption tracking-[0.2em] text-slate">
           Loading type

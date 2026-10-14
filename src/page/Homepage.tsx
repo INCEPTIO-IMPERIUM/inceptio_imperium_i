@@ -97,10 +97,10 @@ const CONTACTS = [
 ]
 
 const PALETTE = {
-  navy: '#2B3153',
-  slate: '#505870',
-  steel: '#86939B',
-  mist: '#EFEFEF',
+  navy: '#211A29',
+  slate: '#71657C',
+  steel: '#9A8DA9',
+  mist: '#F7F3FB',
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -221,7 +221,7 @@ function Hero() {
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(19_22_43/0.6)_50%,#13162b_90%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(9_7_12/0.6)_50%,#09070c_90%)]"
       />
 
       <motion.div

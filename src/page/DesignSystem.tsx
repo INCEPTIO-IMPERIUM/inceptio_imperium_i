@@ -2,17 +2,22 @@ import { useState } from 'react'
 import { Badge, Button, Card, Input } from '../components/ui'
 
 const scale = [
-  { step: 50, hex: '#F7F7F8' },
-  { step: 100, hex: '#EFEFEF', name: 'Mist' },
-  { step: 200, hex: '#DADDE1' },
-  { step: 300, hex: '#BCC3C9' },
-  { step: 400, hex: '#86939B', name: 'Steel' },
-  { step: 500, hex: '#6B7585' },
-  { step: 600, hex: '#505870', name: 'Slate' },
-  { step: 700, hex: '#3D4462' },
-  { step: 800, hex: '#2B3153', name: 'Navy' },
-  { step: 900, hex: '#1E2340' },
-  { step: 950, hex: '#13162B' },
+  { step: 50, hex: '#FBF9FD' },
+  { step: 100, hex: '#F7F3FB', name: 'Mist' },
+  { step: 200, hex: '#D6CCE0' },
+  { step: 300, hex: '#C0B6C8' },
+  { step: 400, hex: '#9A8DA9', name: 'Steel' },
+  { step: 500, hex: '#82768E' },
+  { step: 600, hex: '#71657C', name: 'Slate' },
+  { step: 700, hex: '#362746' },
+  { step: 800, hex: '#211A29', name: 'Navy' },
+  { step: 900, hex: '#17131D' },
+  { step: 950, hex: '#09070C' },
+]
+
+const accents = [
+  { hex: '#A879FF', name: 'Violet' },
+  { hex: '#D4BAFF', name: 'Lilac' },
 ]
 
 const typeScale = [
@@ -74,6 +79,19 @@ function DesignSystem() {
               <p className="mt-2 text-small font-medium">
                 {step} {name && <span className="text-muted-foreground">· {name}</span>}
               </p>
+              <p className="font-mono text-caption text-muted-foreground">{hex}</p>
+            </div>
+          ))}
+        </div>
+        <h3 className="mb-4 mt-10 text-h4">Accent — one per viewport</h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-11">
+          {accents.map(({ hex, name }) => (
+            <div key={name}>
+              <div
+                className="aspect-square rounded-md border border-border"
+                style={{ backgroundColor: hex }}
+              />
+              <p className="mt-2 text-small font-medium">{name}</p>
               <p className="font-mono text-caption text-muted-foreground">{hex}</p>
             </div>
           ))}
