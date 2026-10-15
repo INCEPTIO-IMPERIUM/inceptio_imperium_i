@@ -18,6 +18,7 @@ import ShapeBlur from '../components/effect/ShapeBlur'
 import TechText from '../components/effect/TechText'
 import { Eyebrow } from '../components/ui'
 import { cn } from '../lib/cn'
+import { useActiveSection } from '../lib/useActiveSection'
 
 /*
  * Inceptio Imperium — intentional design.
@@ -149,7 +150,13 @@ function Pause() {
  * Sections
  * ------------------------------------------------------------------ */
 
+// In-page sections the nav tracks; '#about' is a separate page, so it never lights up here.
+const SPY_IDS = NAV_LINKS.filter(link => link.href !== '#about').map(link => link.href.slice(1))
+
 function Nav() {
+  const active = useActiveSection(SPY_IDS)
+  const reduceMotion = useReducedMotion()
+
   return (
     <header className="fixed inset-x-0 top-5 z-50 flex justify-center px-4">
       <GlassSurface
@@ -171,9 +178,22 @@ function Nav() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="rounded-full px-4 py-2 text-small text-steel transition-colors duration-500 hover:text-mist"
+                  aria-current={active === link.href.slice(1) ? 'location' : undefined}
+                  className={cn(
+                    'relative block rounded-full px-4 py-2 text-small transition-colors duration-500 hover:text-mist',
+                    active === link.href.slice(1) ? 'text-mist' : 'text-steel',
+                  )}
                 >
                   {link.label}
+                  {/* One underline that travels between links — it follows the reader, it never loops. */}
+                  {active === link.href.slice(1) && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      aria-hidden
+                      className="absolute inset-x-4 bottom-1 h-px bg-violet"
+                      transition={reduceMotion ? { duration: 0 } : { duration: 0.6, ease: EASE }}
+                    />
+                  )}
                 </a>
               </li>
             ))}
