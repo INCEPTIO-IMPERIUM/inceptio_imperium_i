@@ -189,7 +189,7 @@ function IndexRow({
           </p>
           <p className="mt-5 text-body font-light leading-relaxed text-imperium-300">{principle.text}</p>
           <p className="mt-6 flex gap-3 border-t border-white/10 pt-4 text-small font-light text-imperium-400">
-            <span className="font-mono text-caption uppercase tracking-[0.2em] text-slate">Rule</span>
+            <span className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">Rule</span>
             {principle.rule}
           </p>
         </motion.div>
@@ -205,7 +205,7 @@ function PrincipleIndex() {
     <section id="philosophy" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-40 sm:px-10">
       <div className="mb-16 flex items-end justify-between gap-6">
         <p className="font-mono text-caption uppercase tracking-[0.3em] text-steel">Four principles</p>
-        <p className="font-mono text-caption tracking-[0.2em] text-slate">01 — 04</p>
+        <p className="font-mono text-caption tracking-[0.2em] text-imperium-500">01 — 04</p>
       </div>
       <ol className="border-b border-white/15">
         {PRINCIPLES.map((p, i) => (

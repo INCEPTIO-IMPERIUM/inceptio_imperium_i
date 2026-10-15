@@ -187,7 +187,7 @@ export default function About() {
                   <span aria-hidden className="font-mincho text-body text-steel/70">
                     {chapter.kanji}
                   </span>
-                  <span className="font-mono text-caption tracking-[0.2em] text-slate">
+                  <span className="font-mono text-caption tracking-[0.2em] text-imperium-500">
                     {pad(i + 1)} — {pad(CHAPTERS.length)}
                     <span className="text-steel"> · {chapter.label}</span>
                   </span>
@@ -280,7 +280,7 @@ export default function About() {
                   <span
                     className={cn(
                       'hidden font-mono text-caption tracking-[0.2em] transition-[opacity,color] duration-500 xl:block',
-                      i === active ? 'text-steel opacity-100' : 'text-slate opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
+                      i === active ? 'text-steel opacity-100' : 'text-imperium-500 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100',
                     )}
                   >
                     {pad(i + 1)} {chapter.label}
@@ -323,7 +323,7 @@ export default function About() {
           <circle cx="24" cy="24" r="22" fill="none" stroke="rgb(255 255 255 / 0.08)" strokeWidth="0.75" />
           <circle ref={arcRef} cx="24" cy="24" r="22" fill="none" stroke="#F7F3FB" strokeWidth="0.75" strokeLinecap="round" />
         </svg>
-        <p ref={stepRef} className="font-mono text-caption tracking-[0.2em] text-slate">
+        <p ref={stepRef} className="font-mono text-caption tracking-[0.2em] text-imperium-500">
           Loading type
         </p>
       </div>

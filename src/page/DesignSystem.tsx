@@ -7,7 +7,7 @@ const scale = [
   { step: 200, hex: '#D6CCE0' },
   { step: 300, hex: '#C0B6C8' },
   { step: 400, hex: '#9A8DA9', name: 'Steel' },
-  { step: 500, hex: '#82768E' },
+  { step: 500, hex: '#90849C' },
   { step: 600, hex: '#71657C', name: 'Slate' },
   { step: 700, hex: '#362746' },
   { step: 800, hex: '#211A29', name: 'Navy' },

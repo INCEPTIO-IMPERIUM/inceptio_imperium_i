@@ -401,7 +401,7 @@ function Principles() {
                       className={cn(
                         'mt-3 block text-small transition-colors duration-500',
                         MINCHO,
-                        i === active ? 'text-mist' : 'text-slate group-hover:text-steel',
+                        i === active ? 'text-mist' : 'text-imperium-500 group-hover:text-steel',
                       )}
                     >
                       {p.kanji}
@@ -494,7 +494,7 @@ function Work() {
                 <ShapeBlur variation={[0, 1, 3][i % 3]} shapeSize={1} roundness={0.5} borderSize={0.03} circleSize={0.3} circleEdge={0.6} />
               </div>
               <div className="mt-auto">
-                <p className="font-mono text-caption uppercase tracking-[0.2em] text-slate">{item.meta}</p>
+                <p className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">{item.meta}</p>
                 <h3 className="mt-3 text-h3 font-light text-mist">{item.title}</h3>
                 <p className="mt-2 text-small font-light text-imperium-400 transition-colors duration-700 group-hover:text-imperium-300">
                   {item.text}
@@ -599,7 +599,7 @@ function Contact() {
             </AnimatePresence>
             <div className="flex items-center justify-between gap-4">
               <MetaBallsButton href={contact.href}>{contact.action}</MetaBallsButton>
-              <span className="font-mono text-caption text-slate">
+              <span className="font-mono text-caption text-imperium-500">
                 {String(selected + 1).padStart(2, '0')} — {String(CONTACTS.length).padStart(2, '0')}
               </span>
             </div>
@@ -620,7 +620,7 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
         <p className="max-w-sm text-small font-light leading-relaxed text-imperium-400">
           A portfolio that doesn't ask to be admired so much as inhabited.
         </p>
-        <ul className="flex flex-wrap justify-center gap-8 text-caption uppercase tracking-[0.25em] text-slate">
+        <ul className="flex flex-wrap justify-center gap-8 text-caption uppercase tracking-[0.25em] text-imperium-500">
           {NAV_LINKS.map(link => (
             <li key={link.href}>
               <a href={link.href} className="transition-colors duration-500 hover:text-mist">
@@ -636,7 +636,7 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
         </ul>
         <a
           href="https://github.com/INCEPTIO-IMPERIUM"
-          className="group flex items-center gap-3 text-caption uppercase tracking-[0.25em] text-slate transition-colors duration-500 hover:text-mist"
+          className="group flex items-center gap-3 text-caption uppercase tracking-[0.25em] text-imperium-500 transition-colors duration-500 hover:text-mist"
         >
           {/* The organization's í mark, echoing its cream-and-ink avatar. */}
           <span
