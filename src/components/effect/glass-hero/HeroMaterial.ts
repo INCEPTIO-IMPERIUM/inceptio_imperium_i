@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { heroFragment, heroVertex } from './heroShader'
 import { hexToLinear } from './math'
 
-const PALETTE = { canvas: '#09070C', navy: '#211A29', slate: '#71657C', steel: '#9A8DA9', mist: '#F7F3FB' }
+const PALETTE = { canvas: '#1B1720', navy: '#211A29', slate: '#71657C', steel: '#9A8DA9', mist: '#F7F3FB' }
 
 export interface Quality {
   steps: number

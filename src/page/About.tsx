@@ -100,7 +100,7 @@ export default function About() {
   return (
     <div
       ref={rootRef}
-      className="glass-hero-cursor dark relative min-h-screen overflow-x-clip bg-imperium-950 text-mist selection:bg-imperium-700 selection:text-mist"
+      className="glass-hero-cursor dark grain-overlay bg-grain relative min-h-screen overflow-x-clip text-mist selection:bg-imperium-700 selection:text-mist"
     >
       {/* The canvas lives here; it is created and disposed by GlassHeroApp. */}
       <div ref={hostRef} aria-hidden className="fixed inset-0 z-0" />
@@ -274,7 +274,7 @@ export default function About() {
                   <span
                     className={cn(
                       'block h-[7px] w-[7px] rounded-full border transition-colors duration-500',
-                      i === active ? 'border-mist bg-mist' : 'border-white/30 bg-imperium-950 group-hover:border-white/60',
+                      i === active ? 'border-mist bg-mist' : 'border-white/30 bg-ink-grain group-hover:border-white/60',
                     )}
                   />
                   <span
@@ -317,7 +317,7 @@ export default function About() {
         aria-valuemax={100}
         aria-valuenow={0}
         aria-busy="true"
-        className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-6 bg-imperium-950 transition-[opacity,transform,filter] ease-out-soft"
+        className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-6 bg-grain transition-[opacity,transform,filter] ease-out-soft"
       >
         <svg viewBox="0 0 48 48" className="h-14 w-14 -rotate-90" aria-hidden>
           <circle cx="24" cy="24" r="22" fill="none" stroke="rgb(255 255 255 / 0.08)" strokeWidth="0.75" />

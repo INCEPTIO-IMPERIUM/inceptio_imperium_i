@@ -16,6 +16,7 @@ import MetaBalls from '../components/effect/MetaBalls'
 import OptionWheel from '../components/effect/OptionWheel'
 import ShapeBlur from '../components/effect/ShapeBlur'
 import TechText from '../components/effect/TechText'
+import { Eyebrow } from '../components/ui'
 import { cn } from '../lib/cn'
 
 /*
@@ -139,12 +140,6 @@ function GlassButton({ href, children, className }: { href: string; children: Re
   )
 }
 
-function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <p className={cn('font-mono text-caption uppercase tracking-[0.3em] text-steel', className)}>{children}</p>
-  )
-}
-
 /** A thin vertical rule — a pause between sections. */
 function Pause() {
   return <div aria-hidden className="mx-auto h-32 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent" />
@@ -221,7 +216,7 @@ function Hero() {
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(9_7_12/0.6)_50%,#09070c_90%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(27_23_32/0.6)_50%,#1b1720_90%)]"
       />
 
       <motion.div
@@ -493,7 +488,7 @@ function Work() {
                 exit: { opacity: 0, filter: 'blur(10px)' },
               }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="group relative flex min-h-[320px] flex-col bg-imperium-950 p-8 transition-colors duration-700 hover:bg-imperium-900"
+              className="group relative flex min-h-[320px] flex-col bg-ink-grain p-8 transition-colors duration-700 hover:bg-ink-grain-raised"
             >
               <div className="h-24 w-24 opacity-40 transition-opacity duration-700 group-hover:opacity-90">
                 <ShapeBlur variation={[0, 1, 3][i % 3]} shapeSize={1} roundness={0.5} borderSize={0.03} circleSize={0.3} circleEdge={0.6} />
@@ -670,7 +665,7 @@ export default function Homepage() {
   const footerInView = useInView(footerRef, { margin: '0px 0px -40px 0px' })
 
   return (
-    <div className="dark relative min-h-screen overflow-x-clip bg-imperium-950 text-mist selection:bg-imperium-700 selection:text-mist">
+    <div className="dark grain-overlay bg-grain relative min-h-screen overflow-x-clip text-mist selection:bg-imperium-700 selection:text-mist">
       <Nav />
       <main>
         <Hero />

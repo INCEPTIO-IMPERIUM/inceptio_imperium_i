@@ -32,6 +32,17 @@
   /* The one accent — never a fill, never more than one per viewport */
   --color-violet: #a879ff;
   --color-lilac: #d4baff;
+  /* The bright end of Cyberleaf's violet: its primary-button gradient */
+  --color-violet-light: #d5b9ff;
+  --color-violet-deep: #9662e7;
+
+  /* Page canvas: sampled from Cyberleaf — a lifted ink that carries fine grain */
+  --color-ink-grain: #1b1720;
+  --color-ink-grain-raised: #231d2a; /* hover / raised cell on the canvas */
+
+  /* Vivid light sources (concept "Index" draft) — glows and strokes only, never text fills behind copy */
+  --color-coral: #ff5a4e;
+  --color-lime: #d4ff5a;
 
   /* Status colors, tuned to sit with the muted palette */
   --color-success: #3f7a5f;
@@ -126,12 +137,14 @@
   --secondary-foreground: var(--color-imperium-800);
   --accent: var(--color-imperium-400);
   --ring: var(--color-imperium-500);
+  --gradient-mid: var(--color-imperium-700);
+  --gradient-end: #7c4ad8; /* violet deepened to 5.0:1 on mist — #a879ff is only 2.8:1 here */
   color-scheme: light;
 }
 
 .dark {
-  --background: var(--color-imperium-950);
-  --surface: var(--color-imperium-900);
+  --background: var(--color-ink-grain);
+  --surface: var(--color-ink-grain-raised);
   --surface-raised: var(--color-imperium-800);
   --foreground: var(--color-imperium-100);
   --muted: var(--color-imperium-800);
@@ -144,13 +157,15 @@
   --secondary-foreground: var(--color-imperium-100);
   --accent: var(--color-violet);
   --ring: var(--color-violet);
+  --gradient-mid: var(--color-lilac);
+  --gradient-end: var(--color-violet);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: var(--color-imperium-950);
-    --surface: var(--color-imperium-900);
+    --background: var(--color-ink-grain);
+    --surface: var(--color-ink-grain-raised);
     --surface-raised: var(--color-imperium-800);
     --foreground: var(--color-imperium-100);
     --muted: var(--color-imperium-800);
@@ -163,6 +178,8 @@
     --secondary-foreground: var(--color-imperium-100);
     --accent: var(--color-violet);
     --ring: var(--color-violet);
+    --gradient-mid: var(--color-lilac);
+    --gradient-end: var(--color-violet);
     color-scheme: dark;
   }
 }
@@ -184,6 +201,65 @@
     var(--color-slate) 50%,
     var(--color-steel) 100%
   );
+}
+
+/*
+ * Theme primitives (template base).
+ * text-gradient: the closing word of a display heading — foreground into violet.
+ * Every stop holds ≥ 3:1 on its canvas, so use it on large type only (≥ 24px).
+ */
+@utility text-gradient {
+  color: transparent;
+  background-image: linear-gradient(
+    110deg,
+    var(--foreground) 8%,
+    var(--gradient-mid) 42%,
+    var(--gradient-end) 82%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/*
+ * The page canvas, in two parts so the texture survives opaque layers:
+ *   bg-grain       — the lifted ink plus a faint violet bloom from above (on the page root)
+ *   grain-overlay  — fine monochrome noise, fixed over everything, including WebGL canvases
+ * Pure CSS/SVG: no image download, no extra WebGL context.
+ */
+@utility bg-grain {
+  background-color: var(--color-ink-grain);
+  /* Sized in viewport units so the bloom stays at the top of a long page, not stretched across it. */
+  background-image: radial-gradient(80vw 60vh at 50% -10vh, rgb(168 121 255 / 0.1), transparent 70%);
+  background-repeat: no-repeat;
+}
+
+@utility grain-overlay {
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 40; /* under the nav (50) and loaders (60) */
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E");
+  }
+}
+
+/* The bright violet fill — Cyberleaf's primary button. Ink text on it holds 4.7:1 at the deep end. */
+@utility bg-violet-gradient {
+  background-image: linear-gradient(110deg, var(--color-violet-light), var(--color-violet-deep));
+}
+
+/* Content column shared by every section. */
+@utility section-wrap {
+  width: 100%;
+  max-width: 82.5rem; /* 1320px */
+  margin-inline: auto;
+}
+
+/* Section padding: fluid block rhythm, gutters that never drop under 24px. */
+@utility section-pad {
+  padding-block: clamp(5rem, 10vw, 9.25rem);
+  padding-inline: clamp(1.5rem, 6.5vw, 6.25rem);
 }
 
 @layer base {
