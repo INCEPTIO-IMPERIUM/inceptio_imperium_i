@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode, type RefObject } from 'react'
+import { useRef, useState, type RefObject } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -16,7 +16,7 @@ import MetaBalls from '../components/effect/MetaBalls'
 import OptionWheel from '../components/effect/OptionWheel'
 import ShapeBlur from '../components/effect/ShapeBlur'
 import TechText from '../components/effect/TechText'
-import { Eyebrow } from '../components/ui'
+import { Eyebrow, GlassButton, MetaBallsButton } from '../components/ui'
 import { cn } from '../lib/cn'
 import { useActiveSection } from '../lib/useActiveSection'
 
@@ -111,35 +111,6 @@ const MINCHO = 'font-mincho'
 /* ------------------------------------------------------------------
  * Small building blocks
  * ------------------------------------------------------------------ */
-
-function GlassButton({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
-  return (
-    <a
-      href={href}
-      className={cn(
-        'group inline-flex rounded-full transition-transform duration-500 ease-out-soft hover:-translate-y-0.5',
-        className,
-      )}
-    >
-      <GlassSurface
-        tone="dark"
-        width="auto"
-        height={46}
-        borderRadius={23}
-        brightness={60}
-        backgroundOpacity={0.04}
-        saturation={1.2}
-      >
-        <span className="flex items-center gap-3 px-5 text-small tracking-wide text-mist">
-          {children}
-          <span aria-hidden className="text-steel transition-transform duration-500 ease-out-soft group-hover:translate-x-1">
-            →
-          </span>
-        </span>
-      </GlassSurface>
-    </a>
-  )
-}
 
 /** A thin vertical rule — a pause between sections. */
 function Pause() {
@@ -525,41 +496,6 @@ function Work() {
         </motion.div>
       </AnimatePresence>
     </section>
-  )
-}
-
-function MetaBallsButton({ href, children }: { href: string; children: ReactNode }) {
-  const [hovered, setHovered] = useState(false)
-
-  return (
-    <a
-      href={href}
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-      className="relative inline-flex h-12 items-center overflow-hidden rounded-full bg-mist px-7 text-small font-medium tracking-wide text-navy transition-transform duration-500 ease-out-soft hover:-translate-y-0.5"
-    >
-      {/* The WebGL layer only exists while hovered, so an idle button costs nothing. */}
-      {hovered && (
-        <span className="absolute inset-0 opacity-40">
-          <MetaBalls
-            color={PALETTE.steel}
-            cursorBallColor={PALETTE.slate}
-            enableTransparency
-            speed={0.3}
-            ballCount={5}
-            animationSize={14}
-            clumpFactor={0.9}
-            cursorBallSize={2.5}
-            hoverSmoothness={0.12}
-          />
-        </span>
-      )}
-      <span className="relative flex items-center gap-3">
-        {children} <span aria-hidden>→</span>
-      </span>
-    </a>
   )
 }
 

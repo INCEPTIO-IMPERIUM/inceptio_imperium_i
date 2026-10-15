@@ -1,16 +1,24 @@
-import { useId, useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { useId, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import BlurText from '../components/effect/BlurText'
+import MetaBalls from '../components/effect/MetaBalls'
+import TechText from '../components/effect/TechText'
+import { Eyebrow, GlassButton, MetaBallsButton, SectionTopline } from '../components/ui'
 import { cn } from '../lib/cn'
 
 /*
- * DRAFT — concept "Index" (hero + numbered principles).
- * Not linked from the site; open at #draft-index. Once approved, these two
- * sections replace Hero and Principles in Homepage.tsx and this file goes.
+ * DRAFT — phase 3: hero + Philosophy on the template base, built from react-bits.
+ * Open at #draft-index. Once approved, Hero, Manifesto and Principles in
+ * Homepage.tsx are replaced by these two sections and this route goes.
  *
- * Vivid colour is treated as light, not paint: one blurred glow and one thin
- * stroke in the hero, and only the open row's numeral in the index.
+ * Effect budget: one ambient effect per view — MetaBalls in the hero.
+ * Everything below moves only in answer to the reader (BlurText on reveal, rows on click).
  */
+
+const SECTIONS = 4 // hero, philosophy, work, contact
+
+const MANIFESTO =
+  'Nothing decorates for its own sake; motion earns its place by guiding attention, and the silence between elements is a material, not a gap.'
 
 const PRINCIPLES = [
   {
@@ -49,71 +57,122 @@ const PRINCIPLES = [
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const RING_LENGTH = 1100
+/** The closing words of a statement carry the gradient — the template's signature, on our violet. */
+const closingWords = (count: number) => (index: number, total: number) =>
+  index >= total - count ? 'text-gradient' : undefined
 
-/** A loose hand-drawn ring around one word, drawn once on load. */
-function Ring({ children }: { children: string }) {
-  const reduceMotion = useReducedMotion()
+/**
+ * A display statement: real text for assistive tech, BlurText for the eye.
+ * BlurText renders a <p>, which can't sit inside a heading, so the heading is visually hidden.
+ */
+function Statement({
+  as: Heading,
+  text,
+  gradientWords,
+  className,
+}: {
+  as: 'h1' | 'h2'
+  text: string
+  gradientWords: number
+  className?: string
+}) {
   return (
-    <span className="relative inline-block">
-      {children}
-      <svg
-        aria-hidden
-        viewBox="0 0 400 140"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute -left-[14%] -top-[30%] h-[160%] w-[128%] -rotate-[4deg] overflow-visible"
-      >
-        <motion.path
-          d="M30 78 C 40 22, 330 6, 380 52 C 412 84, 330 128, 190 130 C 70 132, 8 110, 22 76 C 32 52, 120 30, 250 26"
-          fill="none"
-          stroke="var(--color-lime)"
-          strokeWidth={2}
-          strokeLinecap="round"
-          // Dash in real user units (path ≈ 1036 long): motion's pathLength is unreliable under preserveAspectRatio="none".
-          strokeDasharray={RING_LENGTH}
-          initial={{ strokeDashoffset: reduceMotion ? 0 : RING_LENGTH }}
-          animate={{ strokeDashoffset: 0 }}
-          transition={{ duration: 1.6, delay: 0.6, ease: EASE }}
+    <>
+      <Heading className="sr-only">{text}</Heading>
+      <div aria-hidden>
+        <BlurText
+          text={text}
+          delay={70}
+          animateBy="words"
+          direction="bottom"
+          stepDuration={0.45}
+          segmentClassName={closingWords(gradientWords)}
+          className={className}
         />
-      </svg>
-    </span>
+      </div>
+    </>
   )
 }
 
 function Hero() {
-  return (
-    <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-6 pb-24 pt-32 sm:px-10">
-      {/* The one light source: violet bleeding into coral, behind the second line. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-[16%] top-[26%] h-[52vh] w-[min(72vw,800px)] rounded-full bg-[radial-gradient(closest-side,rgb(255_90_78/0.7)_0%,rgb(255_90_78/0.7)_30%,rgb(168_121_255/0.55)_62%,transparent)] blur-[48px]"
-      />
+  const ref = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
+  const filter = useTransform(scrollYProgress, [0, 0.75], ['blur(0px)', reduceMotion ? 'blur(0px)' : 'blur(10px)'])
 
-      <div className="relative mx-auto w-full max-w-6xl">
-        <p className="font-mono text-caption uppercase tracking-[0.3em] text-steel">Inceptio Imperium · Studio</p>
-        <h1 className="mt-8 max-w-5xl text-[clamp(2.5rem,8.4vw,7.5rem)] font-light uppercase leading-[0.95] tracking-[-0.02em] text-mist">
-          Intentional design for <Ring>quiet</Ring> software
-        </h1>
-        <div className="mt-12 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-          <BlurText
-            text="Every pixel, every interaction, and every line of code should serve a purpose."
-            delay={60}
-            animateBy="words"
-            direction="bottom"
-            stepDuration={0.45}
-            className="max-w-sm text-body font-light leading-relaxed text-imperium-300"
-          />
-          <a
-            href="#contact"
-            className="group inline-flex w-fit items-center gap-3 rounded-full border border-white/20 px-5 py-2.5 text-small text-mist transition-colors duration-500 hover:border-white/50"
-          >
-            Get in touch
-            <span aria-hidden className="transition-transform duration-500 ease-out-soft group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-              ↗
-            </span>
-          </a>
-        </div>
+  return (
+    <section id="top" ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      {/* The one ambient effect: violet MetaBalls where the template had its photograph, fading out behind the copy. */}
+      <div className="absolute inset-y-0 right-0 w-full opacity-60 [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent_25%,black_75%),linear-gradient(to_bottom,transparent_16%,black_42%)] lg:w-[65%]">
+        <MetaBalls
+          color="#9662E7"
+          cursorBallColor="#D5B9FF"
+          enableTransparency
+          speed={0.12}
+          ballCount={8}
+          animationSize={22}
+          clumpFactor={1.15}
+          cursorBallSize={2}
+          hoverSmoothness={0.05}
+        />
       </div>
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink-grain to-transparent" />
+
+      <motion.div
+        style={{ opacity, filter }}
+        className="section-wrap pointer-events-none relative z-10 flex flex-1 flex-col px-[clamp(1.5rem,6.5vw,6.25rem)] pb-10 pt-32"
+      >
+        <SectionTopline eyebrow="Inceptio Imperium · Studio" index={1} total={SECTIONS} rule />
+
+        <div className="my-auto max-w-4xl py-10">
+          {/* TechText centres and fits its text to 90% of the box; widening the box by 1/0.9
+              and pulling it left by the same margin puts the ink flush with the column. */}
+          <div className="pointer-events-auto -ml-[5.55%] aspect-[8/1] w-[111.1%]">
+            <TechText
+              text="INCEPTIO IMPERIUM"
+              fontFamily="Inter Variable"
+              fontWeight={300}
+              fontSize={200}
+              letterSpacing={0.02}
+              color="#F7F3FB"
+              accentColor="#9A8DA9"
+              reveal="letter"
+              specks={0}
+              speed={0.5}
+              strokeWidth={1}
+            />
+          </div>
+          <Statement
+            as="h1"
+            text="Intentional design for quiet software."
+            gradientWords={2}
+            className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-light leading-[1.04] tracking-[-0.025em] text-mist"
+          />
+          <p className="mt-6 max-w-md text-body font-light leading-relaxed text-imperium-300">
+            Every pixel, every interaction, and every line of code should serve a purpose.
+          </p>
+          <div className="pointer-events-auto mt-10 flex flex-wrap items-center gap-3">
+            <MetaBallsButton href="#contact" tone="violet">
+              Start a project
+            </MetaBallsButton>
+            <GlassButton href="#philosophy">The philosophy</GlassButton>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <p className="flex items-center gap-3 font-mono text-caption uppercase tracking-[0.25em] text-imperium-500">
+            <span aria-hidden className="h-px w-8 bg-white/25" />
+            Human-paced. Pixel-precise.
+          </p>
+          <div className="hidden max-w-[15rem] border-l border-white/20 pl-4 sm:block">
+            <Eyebrow className="mb-2">Point of view</Eyebrow>
+            <p className="text-small font-light leading-relaxed text-imperium-300">
+              Less noise. Fewer ornaments. More room to think.
+            </p>
+          </div>
+        </div>
+      </motion.div>
     </section>
   )
 }
@@ -152,7 +211,7 @@ function IndexRow({
       </span>
 
       <div className="pt-6 sm:pt-10">
-        <h3 className="text-[clamp(1.25rem,2.6vw,2rem)] font-light uppercase tracking-[0.04em] text-mist">
+        <h3 className="text-[clamp(1.25rem,2.6vw,2rem)] font-light tracking-[0.04em] text-mist">
           <button
             type="button"
             onClick={onToggle}
@@ -173,38 +232,67 @@ function IndexRow({
           </button>
         </h3>
 
-        <motion.div
-          id={id}
-          role="region"
-          aria-label={principle.title}
-          hidden={!open}
-          initial={false}
-          animate={open ? { opacity: 1, filter: 'blur(0px)' } : { opacity: 0, filter: 'blur(12px)' }}
-          transition={{ duration: 0.6, ease: EASE, delay: open ? 0.15 : 0 }}
-          className="mt-6 max-w-md pb-12"
-        >
-          <p className="flex items-baseline gap-4">
-            <span className="font-mincho text-h3 text-imperium-200">{principle.kanji}</span>
-            <span className="font-mono text-caption uppercase tracking-[0.3em] text-steel">{principle.reading}</span>
-          </p>
-          <p className="mt-5 text-body font-light leading-relaxed text-imperium-300">{principle.text}</p>
-          <p className="mt-6 flex gap-3 border-t border-white/10 pt-4 text-small font-light text-imperium-400">
-            <span className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">Rule</span>
-            {principle.rule}
-          </p>
-        </motion.div>
+        <div id={id} role="region" aria-label={principle.title} hidden={!open} className="mt-6 max-w-md pb-12">
+          {/* Mounted only while open, so BlurText replays its un-blur every time the row opens. */}
+          {open && (
+            <>
+              <motion.p
+                initial={{ opacity: 0, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, filter: 'blur(0px)' }}
+                transition={{ duration: 0.6, ease: EASE }}
+                className="flex items-baseline gap-4"
+              >
+                <span className="font-mincho text-h3 text-imperium-200">{principle.kanji}</span>
+                <span className="font-mono text-caption uppercase tracking-[0.3em] text-steel">{principle.reading}</span>
+              </motion.p>
+              <BlurText
+                text={principle.text}
+                delay={30}
+                animateBy="words"
+                direction="bottom"
+                stepDuration={0.4}
+                className="mt-5 text-body font-light leading-relaxed text-imperium-300"
+              />
+              <p className="mt-6 flex gap-3 border-t border-white/10 pt-4 text-small font-light text-imperium-400">
+                <span className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">Rule</span>
+                {principle.rule}
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </li>
   )
 }
 
-function PrincipleIndex() {
+function Philosophy() {
   const [open, setOpen] = useState(0)
 
   return (
-    <section id="philosophy" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-40 sm:px-10">
-      <div className="mb-16 flex items-end justify-between gap-6">
-        <p className="font-mono text-caption uppercase tracking-[0.3em] text-steel">Four principles</p>
+    <section id="philosophy" className="section-pad section-wrap scroll-mt-24">
+      <SectionTopline eyebrow="The philosophy" index={2} total={SECTIONS} />
+
+      <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <Statement
+          as="h2"
+          text="Restraint is the sharpest form."
+          gradientWords={2}
+          className="text-[clamp(2.5rem,5.5vw,5rem)] font-light leading-[0.98] tracking-[-0.03em] text-mist"
+        />
+        <div className="flex flex-col justify-end">
+          <BlurText
+            text={MANIFESTO}
+            delay={25}
+            animateBy="words"
+            direction="bottom"
+            stepDuration={0.45}
+            className="max-w-xl text-h4 font-light leading-relaxed text-imperium-200"
+          />
+        </div>
+      </div>
+
+      <div className="mb-10 mt-24 flex items-end justify-between gap-6">
+        <Eyebrow>Four principles</Eyebrow>
         <p className="font-mono text-caption tracking-[0.2em] text-imperium-500">01 — 04</p>
       </div>
       <ol className="border-b border-white/15">
@@ -220,10 +308,10 @@ export default function DraftIndex() {
   return (
     <div className="dark grain-overlay bg-grain min-h-screen overflow-x-clip text-mist">
       <p className="fixed left-4 top-4 z-50 rounded-full border border-white/10 bg-ink-grain/70 px-3 py-1 font-mono text-caption tracking-[0.2em] text-steel backdrop-blur">
-        DRAFT · CONCEPT A — INDEX
+        DRAFT · PHASE 3 — HERO + PHILOSOPHY
       </p>
       <Hero />
-      <PrincipleIndex />
+      <Philosophy />
     </div>
   )
 }

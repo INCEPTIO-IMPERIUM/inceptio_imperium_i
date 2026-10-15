@@ -23,7 +23,7 @@ export function SectionTopline({ eyebrow, index, total, rule, className }: Secti
     <div className={cn('mb-[clamp(1.75rem,5vw,4rem)] flex items-center justify-between gap-5', className)}>
       <Eyebrow rule={rule}>{eyebrow}</Eyebrow>
       <p
-        className="font-mono text-caption tracking-[0.2em] text-steel"
+        className="shrink-0 whitespace-nowrap font-mono text-caption tracking-[0.2em] text-steel"
         aria-label={`Section ${index} of ${total}`}
       >
         {pad(index)} — {pad(total)}

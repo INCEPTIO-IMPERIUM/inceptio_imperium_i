@@ -14,6 +14,8 @@ type BlurTextProps = {
   easing?: Easing | Easing[];
   onAnimationComplete?: () => void;
   stepDuration?: number;
+  /** Extra class per word/letter, e.g. a gradient on the closing words. */
+  segmentClassName?: (index: number, count: number) => string | undefined;
 };
 
 const buildKeyframes = (
@@ -41,7 +43,8 @@ const BlurText: React.FC<BlurTextProps> = ({
   animationTo,
   easing = (t: number) => t,
   onAnimationComplete,
-  stepDuration = 0.35
+  stepDuration = 0.35,
+  segmentClassName
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
@@ -106,6 +109,7 @@ const BlurText: React.FC<BlurTextProps> = ({
             animate={inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
             onAnimationComplete={index === elements.length - 1 ? onAnimationComplete : undefined}
+            className={segmentClassName?.(index, elements.length)}
             style={{
               display: 'inline-block',
               willChange: 'transform, filter, opacity'
