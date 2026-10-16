@@ -1,4 +1,4 @@
-import { motion, type Transition, type Easing } from 'motion/react';
+import { motion, useReducedMotion, type Transition, type Easing } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
 type BlurTextProps = {
@@ -83,8 +83,10 @@ const BlurText: React.FC<BlurTextProps> = ({
     [direction]
   );
 
-  const fromSnapshot = animationFrom ?? defaultFrom;
-  const toSnapshots = animationTo ?? defaultTo;
+  // Reduced motion: words still arrive, but by fading alone — no travel, no blur.
+  const reduceMotion = useReducedMotion();
+  const fromSnapshot = reduceMotion ? { opacity: 0 } : (animationFrom ?? defaultFrom);
+  const toSnapshots = reduceMotion ? [{ opacity: 1 }] : (animationTo ?? defaultTo);
 
   const stepCount = toSnapshots.length + 1;
   const totalDuration = stepDuration * (stepCount - 1);

@@ -281,6 +281,8 @@ function Hero() {
               color="#F7F3FB"
               accentColor="#9A8DA9"
               reveal="letter"
+              // No idle sweep: MetaBalls is the hero's one ambient effect; the wordmark answers the pointer only.
+              sweep={false}
               specks={0}
               speed={0.5}
               strokeWidth={1}
@@ -575,7 +577,8 @@ function Contact() {
             items={CONTACTS.map(c => c.label)}
             defaultSelected={0}
             onChange={index => setSelected(index)}
-            textColor={PALETTE.slate}
+            // Steel, not slate: the nearest unselected option fades to 72% and must still reach 3:1 (3.6:1).
+            textColor={PALETTE.steel}
             activeColor={PALETTE.mist}
             side="left"
             fontSize={2.2}
@@ -678,7 +681,7 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
           </span>
           Inceptio Imperium on GitHub
         </a>
-        <p className="font-mono text-caption tracking-[0.2em] text-imperium-600">
+        <p className="font-mono text-caption tracking-[0.2em] text-imperium-500">
           © {new Date().getFullYear()} INCEPTIO IMPERIUM
         </p>
       </div>
