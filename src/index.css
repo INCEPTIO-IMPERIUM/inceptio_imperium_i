@@ -40,7 +40,7 @@
   --color-ink-grain: #1b1720;
   --color-ink-grain-raised: #231d2a; /* hover / raised cell on the canvas */
 
-  /* Vivid light sources (concept "Index" draft) — glows and strokes only, never text fills behind copy */
+  /* Vivid hues for the Philosophy index: only the open row's numeral takes one. Never fills behind copy. */
   --color-coral: #ff5a4e;
   --color-lime: #d4ff5a;
 

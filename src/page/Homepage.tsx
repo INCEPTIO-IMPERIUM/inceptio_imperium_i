@@ -1,9 +1,8 @@
-import { useRef, useState, type RefObject } from 'react'
+import { useId, useRef, useState, type RefObject } from 'react'
 import {
   AnimatePresence,
   motion,
   useInView,
-  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -16,7 +15,7 @@ import MetaBalls from '../components/effect/MetaBalls'
 import OptionWheel from '../components/effect/OptionWheel'
 import ShapeBlur from '../components/effect/ShapeBlur'
 import TechText from '../components/effect/TechText'
-import { Eyebrow, GlassButton, MetaBallsButton } from '../components/ui'
+import { Eyebrow, GlassButton, MetaBallsButton, SectionTopline } from '../components/ui'
 import { cn } from '../lib/cn'
 import { useActiveSection } from '../lib/useActiveSection'
 
@@ -38,34 +37,45 @@ const NAV_LINKS = [
 ]
 
 const MANIFESTO =
-  'Restraint is not the absence of expression but its sharpest form. Nothing decorates for its own sake; motion earns its place by guiding attention, and the silence between elements is a material, not a gap.'
+  'Nothing decorates for its own sake; motion earns its place by guiding attention, and the silence between elements is a material, not a gap.'
 
 const PRINCIPLES = [
   {
-    title: 'MA',
+    title: 'Ma',
     kanji: '間',
     reading: 'ma — negative space',
     text: 'The meaningful use of emptiness. Space is not left over; it is placed, weighed and given a purpose.',
+    rule: 'Sections breathe at 160px. Text columns stay narrow.',
+    hue: 'text-violet',
   },
   {
-    title: 'KANSO',
+    title: 'Kanso',
     kanji: '簡素',
     reading: 'kanso — restraint',
     text: 'Nothing decorates for its own sake. What remains after everything unnecessary is removed is the design.',
+    rule: 'One ambient effect per view. No ornaments, no badges.',
+    hue: 'text-coral',
   },
   {
-    title: 'MOTION',
+    title: 'Motion',
     kanji: '動',
     reading: 'dō — movement',
     text: 'Motion earns its place by guiding attention — never to perform, always to lead the eye somewhere it matters.',
+    rule: 'Things arrive by un-blurring and leave by blurring.',
+    hue: 'text-lime',
   },
   {
-    title: 'QUIET',
+    title: 'Quiet',
     kanji: '静',
     reading: 'sei — stillness',
     text: 'Precise, immersive, otherworldly. An interface that does not ask to be admired so much as inhabited.',
+    rule: 'When unsure between two options, choose the quieter one.',
+    hue: 'text-lilac',
   },
 ]
+
+// Section count for the toplines: hero, philosophy, work, contact.
+const SECTIONS = 4
 
 const WORK_TABS = [{ label: 'Interface' }, { label: 'Motion' }, { label: 'Systems' }]
 
@@ -181,229 +191,251 @@ function Nav() {
   )
 }
 
+/** The closing words of a statement carry the gradient — the template's signature, on our violet. */
+const closingWords = (count: number) => (index: number, total: number) =>
+  index >= total - count ? 'text-gradient' : undefined
+
+/**
+ * A display statement: real text for assistive tech, BlurText for the eye.
+ * BlurText renders a <p>, which can't sit inside a heading, so the heading is visually hidden.
+ */
+function Statement({
+  as: Heading,
+  text,
+  gradientWords,
+  className,
+}: {
+  as: 'h1' | 'h2'
+  text: string
+  gradientWords: number
+  className?: string
+}) {
+  return (
+    <>
+      <Heading className="sr-only">{text}</Heading>
+      <div aria-hidden>
+        <BlurText
+          text={text}
+          delay={70}
+          animateBy="words"
+          direction="bottom"
+          stepDuration={0.45}
+          segmentClassName={closingWords(gradientWords)}
+          className={className}
+        />
+      </div>
+    </>
+  )
+}
+
 function Hero() {
   const ref = useRef<HTMLElement>(null)
   const reduceMotion = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-  const y = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : -80])
-  const filter = useTransform(scrollYProgress, [0, 0.7], ['blur(0px)', reduceMotion ? 'blur(0px)' : 'blur(10px)'])
+  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
+  const filter = useTransform(scrollYProgress, [0, 0.75], ['blur(0px)', reduceMotion ? 'blur(0px)' : 'blur(10px)'])
 
   return (
-    <section id="top" ref={ref} className="relative h-[100svh] min-h-[680px] overflow-hidden">
-      {/* Sparse, slow blobs — atmosphere, not spectacle. */}
-      <div className="absolute inset-0 opacity-35">
+    <section id="top" ref={ref} className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      {/* The one ambient effect: violet MetaBalls where the template had its photograph. The mask fades them
+          away from the copy (left), the topline (top) and the small meta row (bottom), so text keeps its contrast. */}
+      <div className="absolute inset-y-0 right-0 w-full opacity-60 [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent_25%,black_75%),linear-gradient(to_bottom,transparent_16%,black_42%),linear-gradient(to_top,transparent_24%,black_46%)] lg:w-[65%]">
         <MetaBalls
-          color={PALETTE.slate}
-          cursorBallColor={PALETTE.steel}
+          color="#9662E7"
+          cursorBallColor="#D5B9FF"
           enableTransparency
           speed={0.12}
-          ballCount={7}
-          animationSize={30}
-          clumpFactor={1.3}
+          ballCount={8}
+          animationSize={22}
+          clumpFactor={1.15}
           cursorBallSize={2}
-          hoverSmoothness={0.04}
+          hoverSmoothness={0.05}
         />
       </div>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(27_23_32/0.6)_50%,#1b1720_90%)]"
-      />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink-grain to-transparent" />
 
       <motion.div
-        style={{ opacity, y, filter }}
-        className="pointer-events-none relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center justify-center px-4 text-center"
+        style={{ opacity, filter }}
+        className="section-wrap pointer-events-none relative z-10 flex flex-1 flex-col px-[clamp(1.5rem,6.5vw,6.25rem)] pb-32 pt-28"
       >
-        <Eyebrow>Portfolio · Intentional design</Eyebrow>
-        <div className="pointer-events-auto mt-6 h-[clamp(100px,18vw,220px)] w-full max-w-4xl">
-          <TechText
-            text="INCEPTIO IMPERIUM"
-            fontFamily="Inter Variable"
-            fontWeight={300}
-            fontSize={200}
-            letterSpacing={0.02}
-            color={PALETTE.mist}
-            accentColor={PALETTE.steel}
-            reveal="letter"
-            specks={0}
-            speed={0.5}
-            strokeWidth={1}
+        <SectionTopline eyebrow="Inceptio Imperium · Studio" index={1} total={SECTIONS} rule />
+
+        <div className="my-auto max-w-4xl py-4">
+          {/* TechText centres and fits its text to 90% of the box; widening the box by 1/0.9
+              and pulling it left by the same margin puts the ink flush with the column. */}
+          <div className="pointer-events-auto -ml-[5.55%] aspect-[8/1] w-[111.1%]">
+            <TechText
+              text="INCEPTIO IMPERIUM"
+              fontFamily="Inter Variable"
+              fontWeight={300}
+              fontSize={200}
+              letterSpacing={0.02}
+              color="#F7F3FB"
+              accentColor="#9A8DA9"
+              reveal="letter"
+              specks={0}
+              speed={0.5}
+              strokeWidth={1}
+            />
+          </div>
+          <Statement
+            as="h1"
+            text="Intentional design for quiet software."
+            gradientWords={2}
+            className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-light leading-[1.04] tracking-[-0.025em] text-mist"
           />
+          <p className="mt-6 max-w-md text-body font-light leading-relaxed text-imperium-300">
+            Every pixel, every interaction, and every line of code should serve a purpose.
+          </p>
+          <div className="pointer-events-auto mt-10 flex flex-wrap items-center gap-3">
+            <MetaBallsButton href="#contact" tone="violet">
+              Start a project
+            </MetaBallsButton>
+            <GlassButton href="#philosophy">The philosophy</GlassButton>
+          </div>
         </div>
-        <BlurText
-          text="Every pixel, every interaction, and every line of code should serve a purpose."
-          delay={80}
-          animateBy="words"
-          direction="bottom"
-          stepDuration={0.45}
-          className="mt-4 max-w-lg justify-center text-body font-light leading-relaxed text-imperium-300 sm:text-h4 sm:font-light"
-        />
-        <div className="pointer-events-auto mt-14">
-          <GlassButton href="#philosophy">Enter</GlassButton>
+
+        {/* pb-32 (8rem) above keeps this row clear of the page's fixed 8rem GradualBlur. */}
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <p className="flex items-center gap-3 font-mono text-caption uppercase tracking-[0.25em] text-imperium-500">
+            <span aria-hidden className="h-px w-8 bg-white/25" />
+            Human-paced. Pixel-precise.
+          </p>
+          <div className="hidden max-w-[15rem] border-l border-white/20 pl-4 sm:block">
+            <Eyebrow className="mb-2">Point of view</Eyebrow>
+            <p className="text-small font-light leading-relaxed text-imperium-300">
+              Less noise. Fewer ornaments. More room to think.
+            </p>
+          </div>
         </div>
       </motion.div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-10 z-10 flex justify-center">
-        <span className="relative h-14 w-px overflow-hidden bg-white/10">
-          <motion.span
-            className="absolute inset-x-0 top-0 h-5 bg-mist/70"
-            animate={reduceMotion ? undefined : { y: [-20, 56] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </span>
-      </div>
     </section>
   )
 }
 
-function Manifesto() {
-  return (
-    <section className="relative mx-auto flex min-h-[90svh] max-w-3xl flex-col items-center justify-center px-6 py-40 text-center">
-      <span aria-hidden className={cn('text-[4rem] leading-none text-steel/60', MINCHO)}>
-        間
-      </span>
-      <Eyebrow className="mt-6">Inceptio Imperium is built on intentional design</Eyebrow>
-      <BlurText
-        text={MANIFESTO}
-        delay={40}
-        animateBy="words"
-        direction="bottom"
-        stepDuration={0.5}
-        threshold={0.3}
-        className="mt-10 justify-center text-h4 font-light leading-relaxed text-imperium-200 sm:text-h3 sm:font-light sm:leading-snug"
-      />
-    </section>
-  )
-}
-
-function Principles() {
-  const ref = useRef<HTMLElement>(null)
-  const [active, setActive] = useState(0)
-  const reduceMotion = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 120])
-
-  useMotionValueEvent(scrollYProgress, 'change', v => {
-    const next = Math.min(PRINCIPLES.length - 1, Math.max(0, Math.floor(v * PRINCIPLES.length)))
-    setActive(prev => (prev === next ? prev : next))
-  })
-
-  const jumpTo = (index: number) => {
-    const el = ref.current
-    if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY
-    const travel = el.offsetHeight - window.innerHeight
-    window.scrollTo({ top: top + (travel * (index + 0.5)) / PRINCIPLES.length, behavior: 'smooth' })
-  }
-
-  const principle = PRINCIPLES[active]
+function IndexRow({
+  index,
+  principle,
+  open,
+  onToggle,
+}: {
+  index: number
+  principle: (typeof PRINCIPLES)[number]
+  open: boolean
+  onToggle: () => void
+}) {
+  const id = useId()
+  const number = String(index + 1).padStart(2, '0')
 
   return (
-    <section
-      id="philosophy"
-      ref={ref}
-      className="relative"
-      style={{ height: `${PRINCIPLES.length * 110 + 30}vh` }}
+    <li
+      className={cn(
+        'group grid grid-cols-[auto_1fr] items-start gap-x-6 overflow-hidden border-t border-white/15 transition-[max-height] duration-700 ease-out-soft sm:grid-cols-[1fr_1fr] sm:gap-x-10',
+        open ? 'max-h-[60rem]' : 'max-h-[clamp(5rem,13vw,10.5rem)]',
+      )}
     >
-      <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-16 px-6 pt-16 sm:px-10 lg:grid-cols-[1fr_1fr]">
-          {/* The pinned visual: one kanji, one ring, a lot of space. */}
-          <div className="flex justify-center">
-            <div className="relative aspect-square w-[min(58vw,380px)]">
-              <motion.svg style={{ rotate }} viewBox="0 0 200 200" className="absolute inset-0 h-full w-full" aria-hidden>
-                <circle cx="100" cy="100" r="98" fill="none" stroke={PALETTE.slate} strokeWidth="0.3" strokeDasharray="0.6 4" />
-                <circle cx="100" cy="2" r="1.6" fill={PALETTE.mist} />
-              </motion.svg>
-              <div className="absolute inset-[14%] opacity-50">
-                <ShapeBlur variation={2} shapeSize={1} roundness={0.5} borderSize={0.02} circleSize={0.35} circleEdge={0.7} />
-              </div>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active}
-                    initial={{ opacity: 0, filter: 'blur(14px)' }}
-                    animate={{ opacity: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, filter: 'blur(14px)' }}
-                    transition={{ duration: 0.7, ease: EASE }}
-                    className="flex flex-col items-center"
-                  >
-                    <span className={cn('text-[clamp(3.5rem,9vw,6rem)] leading-none text-mist', MINCHO)}>
-                      {principle.kanji}
-                    </span>
-                    <span className="mt-5 font-mono text-caption uppercase tracking-[0.3em] text-steel">
-                      {principle.reading}
-                    </span>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
+      {/* Closed rows show only the top of the numeral — the rule cuts it, which invites the click. */}
+      <span
+        aria-hidden
+        onClick={onToggle}
+        className={cn(
+          'block cursor-pointer select-none pt-4 text-[clamp(7rem,21vw,17rem)] font-extralight leading-[0.8] tracking-[-0.04em] tabular-nums transition-colors duration-700',
+          open ? principle.hue : 'text-mist group-hover:text-imperium-200',
+        )}
+      >
+        {number}
+      </span>
 
-          <div>
-            <Eyebrow>
-              Principle {String(active + 1).padStart(2, '0')} — {String(PRINCIPLES.length).padStart(2, '0')}
-            </Eyebrow>
-            <div className="mt-4 h-24 w-full max-w-md sm:h-32">
-              <TechText
-                text={principle.title}
-                fontFamily="Inter Variable"
-                fontWeight={300}
-                fontSize={140}
-                letterSpacing={0.04}
-                color={PALETTE.mist}
-                accentColor={PALETTE.steel}
-                sweep={false}
-                labels={false}
-                specks={0}
-                strokeWidth={1}
-              />
-            </div>
-            <div className="min-h-[6rem]">
+      <div className="pt-6 sm:pt-10">
+        <h3 className="text-[clamp(1.25rem,2.6vw,2rem)] font-light tracking-[0.04em] text-mist">
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={open}
+            aria-controls={id}
+            className="flex w-full items-center justify-between gap-4 text-left uppercase"
+          >
+            <span>
+              <span className="sr-only">{number} — </span>
+              {principle.title}
+            </span>
+            <span
+              aria-hidden
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/25 text-body text-steel transition-colors duration-500 group-hover:border-white/50 group-hover:text-mist"
+            >
+              {open ? '−' : '+'}
+            </span>
+          </button>
+        </h3>
+
+        <div id={id} role="region" aria-label={principle.title} hidden={!open} className="mt-6 max-w-md pb-12">
+          {/* Mounted only while open, so BlurText replays its un-blur every time the row opens. */}
+          {open && (
+            <>
+              <motion.p
+                initial={{ opacity: 0, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, filter: 'blur(0px)' }}
+                transition={{ duration: 0.6, ease: EASE }}
+                className="flex items-baseline gap-4"
+              >
+                <span className="font-mincho text-h3 text-imperium-200">{principle.kanji}</span>
+                <span className="font-mono text-caption uppercase tracking-[0.3em] text-steel">{principle.reading}</span>
+              </motion.p>
               <BlurText
-                key={active}
                 text={principle.text}
-                delay={40}
+                delay={30}
                 animateBy="words"
                 direction="bottom"
                 stepDuration={0.4}
-                className="max-w-md text-body font-light leading-relaxed text-imperium-300 sm:text-h4 sm:font-light"
+                className="mt-5 text-body font-light leading-relaxed text-imperium-300"
               />
-            </div>
-
-            <ol className="mt-14 flex max-w-md gap-6">
-              {PRINCIPLES.map((p, i) => (
-                <li key={p.title} className="flex-1">
-                  <button
-                    type="button"
-                    onClick={() => jumpTo(i)}
-                    className="group w-full text-left"
-                    aria-current={i === active ? 'step' : undefined}
-                    aria-label={`Principle ${i + 1}: ${p.title}`}
-                  >
-                    <span className="block h-px w-full overflow-hidden bg-white/10">
-                      <span
-                        className={cn(
-                          'block h-full origin-left bg-mist/80 transition-transform duration-700 ease-out-soft',
-                          i <= active ? 'scale-x-100' : 'scale-x-0',
-                        )}
-                      />
-                    </span>
-                    <span
-                      className={cn(
-                        'mt-3 block text-small transition-colors duration-500',
-                        MINCHO,
-                        i === active ? 'text-mist' : 'text-imperium-500 group-hover:text-steel',
-                      )}
-                    >
-                      {p.kanji}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
+              <p className="mt-6 flex gap-3 border-t border-white/10 pt-4 text-small font-light text-imperium-400">
+                <span className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">Rule</span>
+                {principle.rule}
+              </p>
+            </>
+          )}
         </div>
       </div>
+    </li>
+  )
+}
+
+function Philosophy() {
+  const [open, setOpen] = useState(0)
+
+  return (
+    <section id="philosophy" className="section-pad section-wrap scroll-mt-24">
+      <SectionTopline eyebrow="The philosophy" index={2} total={SECTIONS} />
+
+      <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <Statement
+          as="h2"
+          text="Restraint is the sharpest form."
+          gradientWords={2}
+          className="text-[clamp(2.5rem,5.5vw,5rem)] font-light leading-[0.98] tracking-[-0.03em] text-mist"
+        />
+        <div className="flex flex-col justify-end">
+          <BlurText
+            text={MANIFESTO}
+            delay={25}
+            animateBy="words"
+            direction="bottom"
+            stepDuration={0.45}
+            className="max-w-xl text-h4 font-light leading-relaxed text-imperium-200"
+          />
+        </div>
+      </div>
+
+      <div className="mb-10 mt-24 flex items-end justify-between gap-6">
+        <Eyebrow>Four principles</Eyebrow>
+        <p className="font-mono text-caption tracking-[0.2em] text-imperium-500">01 — 04</p>
+      </div>
+      <ol className="border-b border-white/15">
+        {PRINCIPLES.map((p, i) => (
+          <IndexRow key={p.title} index={i} principle={p} open={open === i} onToggle={() => setOpen(i === open ? -1 : i)} />
+        ))}
+      </ol>
     </section>
   )
 }
@@ -625,9 +657,7 @@ export default function Homepage() {
       <Nav />
       <main>
         <Hero />
-        <Manifesto />
-        <Pause />
-        <Principles />
+        <Philosophy />
         <Pause />
         <Work />
         <Pause />
