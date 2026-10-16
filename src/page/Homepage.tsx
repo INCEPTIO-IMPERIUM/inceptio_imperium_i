@@ -151,7 +151,9 @@ function Nav() {
         className="max-w-3xl"
       >
         <nav className="flex w-full items-center justify-between gap-4 pl-4 pr-1" aria-label="Main">
-          <a href="#top" className="font-mono text-small tracking-[0.35em] text-mist">
+          {/* Tighter tracking under 640px keeps the wordmark on one line in the 375px pill, and
+              12px under 360px keeps it whole at 320px; truncate is only a last resort below that. */}
+          <a href="#top" className="min-w-0 truncate whitespace-nowrap font-mono text-small tracking-[0.18em] text-mist max-[359px]:text-caption max-[359px]:tracking-[0.1em] sm:tracking-[0.35em]">
             INCEPTIO IMPERIUM
           </a>
           <ul className="hidden items-center sm:flex">
@@ -181,7 +183,7 @@ function Nav() {
           </ul>
           <a
             href="#contact"
-            className="rounded-full border border-white/15 px-4 py-2 text-small text-mist transition-colors duration-500 hover:border-white/40"
+            className="shrink-0 whitespace-nowrap rounded-full border border-white/15 px-4 py-2 text-small text-mist transition-colors duration-500 hover:border-white/40"
           >
             Say hello
           </a>
