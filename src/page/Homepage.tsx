@@ -440,43 +440,26 @@ function Philosophy() {
   )
 }
 
-function SectionTitle({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
-  return (
-    <div className="flex flex-col items-center text-center">
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <div className="mt-4 h-20 w-full max-w-2xl sm:h-28">
-        <TechText
-          text={title}
-          fontFamily="Inter Variable"
-          fontWeight={300}
-          fontSize={130}
-          letterSpacing={0.04}
-          color={PALETTE.mist}
-          accentColor={PALETTE.steel}
-          sweep={false}
-          specks={0}
-          strokeWidth={1}
-        />
-      </div>
-      <BlurText
-        text={subtitle}
-        delay={50}
-        animateBy="words"
-        direction="bottom"
-        className="mt-2 max-w-md justify-center text-body font-light text-imperium-300"
-      />
-    </div>
-  )
-}
-
 function Work() {
   const [tab, setTab] = useState(0)
 
   return (
-    <section id="work" className="relative mx-auto max-w-5xl scroll-mt-24 px-6 py-40 sm:px-10">
-      <SectionTitle eyebrow="Selected work" title="WORK" subtitle="Fewer projects, each one considered to the last pixel." />
+    <section id="work" className="section-pad section-wrap relative scroll-mt-24">
+      <SectionTopline eyebrow="Selected work" index={3} total={SECTIONS} />
 
-      <div className="mt-16 flex justify-center">
+      <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-20">
+        <Statement
+          as="h2"
+          text="Proof, in practice."
+          gradientWords={2}
+          className="text-[clamp(2.5rem,6vw,5.5rem)] font-light leading-[0.95] tracking-[-0.03em] text-mist"
+        />
+        <p className="max-w-sm text-body font-light leading-relaxed text-imperium-300">
+          Fewer projects, each one considered to the last pixel.
+        </p>
+      </div>
+
+      <div className="mt-14">
         <GooeyNav
           items={WORK_TABS}
           onChange={index => setTab(index)}
@@ -491,7 +474,8 @@ function Work() {
         <motion.div
           key={tab}
           role="tabpanel"
-          className="mt-16 grid gap-px overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.07] md:grid-cols-3"
+          aria-label={WORK_TABS[tab].label}
+          className="mt-10 grid gap-4 md:grid-cols-3"
           initial="hidden"
           animate="show"
           exit="exit"
@@ -511,17 +495,38 @@ function Work() {
                 exit: { opacity: 0, filter: 'blur(10px)' },
               }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="group relative flex min-h-[320px] flex-col bg-ink-grain p-8 transition-colors duration-700 hover:bg-ink-grain-raised"
+              className="group relative flex min-h-[26rem] flex-col overflow-hidden rounded-sm border border-white/[0.13] bg-ink-grain-raised transition-colors duration-700 hover:border-white/30"
             >
-              <div className="h-24 w-24 opacity-40 transition-opacity duration-700 group-hover:opacity-90">
+              {/* The art: ShapeBlur on a violet bloom, where the template put a photograph. */}
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgb(150_98_231/0.28),transparent_55%)]"
+              />
+              <div
+                aria-hidden
+                className="absolute left-1/2 top-[38%] h-44 w-44 -translate-x-1/2 -translate-y-1/2 opacity-50 transition-[opacity,scale] duration-700 ease-out-soft group-hover:scale-105 group-hover:opacity-90"
+              >
                 <ShapeBlur variation={[0, 1, 3][i % 3]} shapeSize={1} roundness={0.5} borderSize={0.03} circleSize={0.3} circleEdge={0.6} />
               </div>
-              <div className="mt-auto">
+              {/* Keeps the copy on near-solid ink, whatever the art does behind it. */}
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-transparent from-35% to-ink-grain to-[88%]" />
+
+              <div className="relative flex items-center justify-between gap-3 p-5">
+                <span className="rounded-full border border-white/20 bg-ink-grain/40 px-3 py-1.5 font-mono text-caption uppercase tracking-[0.15em] text-imperium-200 backdrop-blur">
+                  Case {String(i + 1).padStart(2, '0')}
+                </span>
+                <span
+                  aria-hidden
+                  className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-steel transition-colors duration-500 group-hover:border-violet/60 group-hover:text-violet-light"
+                >
+                  ↗
+                </span>
+              </div>
+
+              <div className="relative mt-auto p-6">
                 <p className="font-mono text-caption uppercase tracking-[0.2em] text-imperium-500">{item.meta}</p>
-                <h3 className="mt-3 text-h3 font-light text-mist">{item.title}</h3>
-                <p className="mt-2 text-small font-light text-imperium-400 transition-colors duration-700 group-hover:text-imperium-300">
-                  {item.text}
-                </p>
+                <h3 className="mt-3 text-[clamp(1.5rem,2.4vw,2rem)] font-light leading-tight text-mist">{item.title}</h3>
+                <p className="mt-2 text-small font-light leading-relaxed text-imperium-300">{item.text}</p>
               </div>
             </motion.a>
           ))}
@@ -536,11 +541,24 @@ function Contact() {
   const contact = CONTACTS[selected]
 
   return (
-    <section id="contact" className="relative mx-auto max-w-5xl scroll-mt-24 px-6 py-40 sm:px-10">
-      <SectionTitle eyebrow="Contact" title="HELLO" subtitle="Turn the wheel. Choose the way that feels right." />
+    <section id="contact" className="section-pad section-wrap relative scroll-mt-24">
+      <SectionTopline eyebrow="Start a conversation" index={4} total={SECTIONS} />
 
-      <div className="mt-20 grid items-center gap-12 lg:grid-cols-2">
-        <div className="relative h-[340px] sm:h-[380px]">
+      <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-20">
+        <Statement
+          as="h2"
+          text="Make room for what comes next."
+          gradientWords={3}
+          className="text-[clamp(2.5rem,5.5vw,5rem)] font-light leading-[0.95] tracking-[-0.03em] text-mist"
+        />
+        <p className="max-w-sm text-body font-light leading-relaxed text-imperium-300">
+          Turn the wheel. Choose the way that feels right.
+        </p>
+      </div>
+
+      {/* The wheel and the panel it drives sit side by side, so a turn and its answer share one glance. */}
+      <div className="mt-16 grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="relative h-[300px] sm:h-[340px]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-1/2 h-14 -translate-y-1/2 border-y border-white/[0.07]"
@@ -562,37 +580,54 @@ function Contact() {
           />
         </div>
 
-        <GlassSurface
-          tone="dark"
-          width="100%"
-          height={320}
-          borderRadius={20}
-          brightness={50}
-          backgroundOpacity={0.03}
-          saturation={1.1}
-        >
-          <div className="flex h-full w-full flex-col justify-between p-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selected}
-                initial={{ opacity: 0, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, filter: 'blur(10px)' }}
-                transition={{ duration: 0.5, ease: EASE }}
-              >
-                <Eyebrow>{contact.label}</Eyebrow>
-                <p className="mt-4 break-words text-h2 font-light text-mist">{contact.value}</p>
-                <p className="mt-3 max-w-sm text-small font-light leading-relaxed text-imperium-300">{contact.note}</p>
-              </motion.div>
-            </AnimatePresence>
-            <div className="flex items-center justify-between gap-4">
-              <MetaBallsButton href={contact.href}>{contact.action}</MetaBallsButton>
-              <span className="font-mono text-caption text-imperium-500">
-                {String(selected + 1).padStart(2, '0')} — {String(CONTACTS.length).padStart(2, '0')}
-              </span>
+        {/* The template's enquiry form becomes the detail panel for the chosen way in. */}
+        <div>
+          <GlassSurface
+            tone="dark"
+            width="100%"
+            height={400}
+            borderRadius={4}
+            brightness={50}
+            backgroundOpacity={0.03}
+            saturation={1.1}
+          >
+            <div className="flex h-full w-full flex-col justify-between p-6 sm:p-8">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-body text-mist">Start here.</p>
+                  <p className="mt-1 text-small font-light text-imperium-400">Every message is read by a person.</p>
+                </div>
+                <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/15 text-violet-light">
+                  ↗
+                </span>
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selected}
+                  initial={{ opacity: 0, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, filter: 'blur(10px)' }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                  aria-live="polite"
+                >
+                  <Eyebrow>{contact.label}</Eyebrow>
+                  <p className="mt-4 text-[clamp(1.25rem,2.6vw,2rem)] font-light leading-tight text-mist [overflow-wrap:anywhere]">{contact.value}</p>
+                  <p className="mt-3 max-w-sm text-small font-light leading-relaxed text-imperium-300">{contact.note}</p>
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-5">
+                <MetaBallsButton href={contact.href} tone="violet">
+                  {contact.action}
+                </MetaBallsButton>
+                <span className="whitespace-nowrap font-mono text-caption tracking-[0.2em] text-imperium-500">
+                  {String(selected + 1).padStart(2, '0')} — {String(CONTACTS.length).padStart(2, '0')}
+                </span>
+              </div>
             </div>
-          </div>
-        </GlassSurface>
+          </GlassSurface>
+        </div>
       </div>
     </section>
   )
