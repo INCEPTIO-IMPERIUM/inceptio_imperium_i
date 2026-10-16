@@ -15,7 +15,7 @@ import MetaBalls from '../components/effect/MetaBalls'
 import OptionWheel from '../components/effect/OptionWheel'
 import ShapeBlur from '../components/effect/ShapeBlur'
 import TechText from '../components/effect/TechText'
-import { Eyebrow, GlassButton, MetaBallsButton, SectionTopline } from '../components/ui'
+import { Eyebrow, GlassButton, MetaBallsButton, SectionHud, SectionTopline } from '../components/ui'
 import { cn } from '../lib/cn'
 import { useActiveSection } from '../lib/useActiveSection'
 
@@ -74,8 +74,14 @@ const PRINCIPLES = [
   },
 ]
 
-// Section count for the toplines: hero, philosophy, work, contact.
-const SECTIONS = 4
+// The page's sections, in order: they drive the topline counters and the position HUD.
+const HUD_SECTIONS = [
+  { id: 'top', label: 'Introduction' },
+  { id: 'philosophy', label: 'Philosophy' },
+  { id: 'work', label: 'Work' },
+  { id: 'contact', label: 'Contact' },
+] as const
+const SECTIONS = HUD_SECTIONS.length
 
 const WORK_TABS = [{ label: 'Interface' }, { label: 'Motion' }, { label: 'Systems' }]
 
@@ -701,6 +707,9 @@ export default function Homepage() {
         <Contact />
       </main>
       <Footer footerRef={footerRef} />
+
+      {/* Position counter, sm and up: on a phone it would sit over the copy. */}
+      <SectionHud sections={HUD_SECTIONS} className="hidden sm:block" />
 
       <div aria-hidden className="transition-opacity duration-700" style={{ opacity: footerInView ? 0 : 1 }}>
         <GradualBlur
