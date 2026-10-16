@@ -266,7 +266,7 @@ function Hero() {
         style={{ opacity, filter }}
         className="section-wrap pointer-events-none relative z-10 flex flex-1 flex-col px-[clamp(1.5rem,6.5vw,6.25rem)] pb-32 pt-28"
       >
-        <SectionTopline eyebrow="Inceptio Imperium · Studio" index={1} total={SECTIONS} rule />
+        <SectionTopline eyebrow="Inceptio Imperium · Studio" index={1} total={SECTIONS} />
 
         <div className="my-auto max-w-4xl py-4">
           {/* TechText centres and fits its text to 90% of the box; widening the box by 1/0.9
@@ -283,15 +283,18 @@ function Hero() {
               reveal="letter"
               // No idle sweep: MetaBalls is the hero's one ambient effect; the wordmark answers the pointer only.
               sweep={false}
+              // No measurement labels ("N 51 × 64"): they read as tooling on the brand's own name.
+              labels={false}
               specks={0}
               speed={0.5}
               strokeWidth={1}
             />
           </div>
+          {/* Hero violet budget is two marks: the MetaBalls light and the button to press. So no gradient here. */}
           <Statement
             as="h1"
             text="Intentional design for quiet software."
-            gradientWords={2}
+            gradientWords={0}
             className="mt-4 text-[clamp(2rem,4.6vw,4rem)] font-light leading-[1.04] tracking-[-0.025em] text-mist"
           />
           <p className="mt-6 max-w-md text-body font-light leading-relaxed text-imperium-300">
@@ -681,10 +684,27 @@ function Footer({ footerRef }: { footerRef: RefObject<HTMLElement | null> }) {
           </span>
           Inceptio Imperium on GitHub
         </a>
-        <p className="font-mono text-caption tracking-[0.2em] text-imperium-500">
-          © {new Date().getFullYear()} INCEPTIO IMPERIUM
-        </p>
       </div>
+
+      {/* The template's giant marquee wordmark: the footer's one ambient effect, decorative only —
+          the name is already real text above and below. Violet appears only in the separators. */}
+      <div aria-hidden className="overflow-hidden border-t border-white/[0.07] py-8">
+        <div className="wordmark-marquee">
+          {[0, 1].map(half => (
+            <span
+              key={half}
+              className="whitespace-nowrap text-[clamp(4.5rem,15vw,13rem)] font-extralight leading-[0.85] tracking-[-0.04em] text-mist"
+            >
+              INCEPTIO IMPERIUM<span className="px-[0.25em] text-violet">·</span>INCEPTIO IMPERIUM
+              <span className="px-[0.25em] text-violet">·</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <p className="pb-10 pt-2 text-center font-mono text-caption tracking-[0.2em] text-imperium-500">
+        © {new Date().getFullYear()} INCEPTIO IMPERIUM
+      </p>
     </footer>
   )
 }

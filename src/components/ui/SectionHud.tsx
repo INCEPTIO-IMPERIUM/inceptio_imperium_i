@@ -39,9 +39,10 @@ export function SectionHud({ sections, className }: { sections: readonly Section
             <span className="sr-only">: {sections[index].label}</span>
           </p>
 
+          {/* Neutral, not violet: the HUD is chrome on every view and must not spend a view's violet budget. */}
           <span aria-hidden className="h-px w-14 overflow-hidden rounded-full bg-white/15">
             <span
-              className="block h-full origin-left bg-violet-light transition-transform duration-700 ease-out-soft"
+              className="block h-full origin-left bg-mist/70 transition-transform duration-700 ease-out-soft"
               style={{ transform: `scaleX(${(index + 1) / sections.length})` }}
             />
           </span>
@@ -58,7 +59,7 @@ export function SectionHud({ sections, className }: { sections: readonly Section
                 disabled={!target}
                 aria-label={target ? `${verb} section: ${target.label}` : `${verb} section`}
                 title={target?.label}
-                className="grid h-8 w-8 place-items-center rounded-full border border-white/10 text-small text-mist transition-colors duration-500 enabled:hover:border-violet/60 enabled:hover:text-violet-light disabled:opacity-30"
+                className="grid h-8 w-8 place-items-center rounded-full border border-white/10 text-small text-mist transition-colors duration-500 enabled:hover:border-white/40 enabled:hover:text-mist disabled:opacity-30"
               >
                 <span aria-hidden>{glyph}</span>
               </button>

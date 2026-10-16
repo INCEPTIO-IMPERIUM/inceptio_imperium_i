@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import About from './page/About'
 import DesignSystem from './page/DesignSystem'
-import DraftSurface from './page/DraftSurface'
 import Homepage from './page/Homepage'
 
 const DESIGN_HASH = '#design-system'
-const SURFACE_HASH = '#draft-surface'
 // '#experience' was the page's first address; keep it working.
 const ABOUT_HASHES = ['#about', '#experience']
 
@@ -19,7 +17,6 @@ function App() {
   }, [])
 
   if (hash === DESIGN_HASH) return <DesignSystem />
-  if (hash === SURFACE_HASH) return <DraftSurface />
   if (ABOUT_HASHES.includes(hash)) return <About />
   return <Homepage />
 }

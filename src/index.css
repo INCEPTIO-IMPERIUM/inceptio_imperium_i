@@ -316,3 +316,25 @@
     animation: none;
   }
 }
+
+/* Footer wordmark marquee: two identical halves, so sliding by -50% loops seamlessly.
+   Slow on purpose; pauses under the pointer and stands still under reduced motion. */
+@keyframes wordmark-marquee {
+  to { transform: translateX(-50%); }
+}
+
+.wordmark-marquee {
+  display: flex;
+  width: max-content;
+  animation: wordmark-marquee 60s linear infinite;
+}
+
+.wordmark-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-marquee {
+    animation: none;
+  }
+}
