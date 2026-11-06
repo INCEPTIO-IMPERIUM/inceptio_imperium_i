@@ -203,6 +203,10 @@ const MetaBalls: React.FC<MetaBallsProps> = ({
     let pointerX = 0;
     let pointerY = 0;
 
+    // Reduced motion: draw one still composition and never loop — the balls are ambient, not information.
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    let animationFrameId = 0;
+
     function resize() {
       if (!container) return;
       const width = container.clientWidth;
@@ -211,6 +215,8 @@ const MetaBalls: React.FC<MetaBallsProps> = ({
       gl.canvas.style.width = `${width}px`;
       gl.canvas.style.height = `${height}px`;
       program.uniforms.iResolution.value.set(gl.canvas.width, gl.canvas.height, 0);
+      // A still frame has to be redrawn by hand after the canvas is resized.
+      if (reducedMotion && !animationFrameId) animationFrameId = requestAnimationFrame(update);
     }
     window.addEventListener('resize', resize);
     resize();
@@ -236,7 +242,6 @@ const MetaBalls: React.FC<MetaBallsProps> = ({
     container.addEventListener('pointerleave', onPointerLeave);
 
     const startTime = performance.now();
-    let animationFrameId = 0;
     // Only render while the canvas is on screen.
     let visible = true;
     const io = new IntersectionObserver(([entry]) => {
@@ -249,8 +254,8 @@ const MetaBalls: React.FC<MetaBallsProps> = ({
         animationFrameId = 0;
         return;
       }
-      animationFrameId = requestAnimationFrame(update);
-      const elapsed = (t - startTime) * 0.001;
+      animationFrameId = reducedMotion ? 0 : requestAnimationFrame(update);
+      const elapsed = reducedMotion ? 0 : (t - startTime) * 0.001;
       program.uniforms.iTime.value = elapsed;
 
       for (let i = 0; i < effectiveBallCount; i++) {
@@ -276,8 +281,10 @@ const MetaBalls: React.FC<MetaBallsProps> = ({
         targetX = cx + Math.cos(elapsed * speed) * rx;
         targetY = cy + Math.sin(elapsed * speed) * ry;
       }
-      mouseBallPos.x += (targetX - mouseBallPos.x) * hoverSmoothness;
-      mouseBallPos.y += (targetY - mouseBallPos.y) * hoverSmoothness;
+      // A still frame has no time to ease, so the cursor ball is placed directly.
+      const ease = reducedMotion ? 1 : hoverSmoothness;
+      mouseBallPos.x += (targetX - mouseBallPos.x) * ease;
+      mouseBallPos.y += (targetY - mouseBallPos.y) * ease;
       program.uniforms.iMouse.value.set(mouseBallPos.x, mouseBallPos.y, 0);
 
       renderer.render({ scene, camera });

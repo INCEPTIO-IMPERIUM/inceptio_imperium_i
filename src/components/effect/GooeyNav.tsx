@@ -160,9 +160,9 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
         {`
           .gooey-nav {
             --color-1: #ffffff;
-            --color-2: #efefef;
-            --color-3: #dadde1;
-            --color-4: #bcc3c9;
+            --color-2: #f7f3fb;
+            --color-3: #d6cce0;
+            --color-4: #c0b6c8;
             --linear-ease: linear(0, 0.068, 0.19 2.7%, 0.804 8.1%, 1.037, 1.199 13.2%, 1.245, 1.27 15.8%, 1.274, 1.272 17.4%, 1.249 19.1%, 0.996 28%, 0.949, 0.928 33.3%, 0.926, 0.933 36.8%, 1.001 45.6%, 1.013, 1.019 50.8%, 1.018 54.4%, 1 63.1%, 0.995 68%, 1.001 85%, 1);
           }
           .gooey-nav .effect {
@@ -178,7 +178,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             transition: color 0.3s ease;
           }
           .gooey-nav .effect.text.active {
-            color: var(--gooey-active-text, #2b3153);
+            color: var(--gooey-active-text, #211a29);
           }
           .gooey-nav .effect.filter {
             filter: blur(7px) contrast(100) blur(0);
@@ -195,7 +195,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             content: "";
             position: absolute;
             inset: 0;
-            background: var(--gooey-pill, #efefef);
+            background: var(--gooey-pill, #f7f3fb);
             transform: scale(0);
             opacity: 0;
             z-index: -1;
@@ -278,7 +278,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             }
           }
           .gooey-nav li.active {
-            color: var(--gooey-active-text, #2b3153);
+            color: var(--gooey-active-text, #211a29);
             text-shadow: none;
           }
           .gooey-nav li.active::after {
@@ -290,7 +290,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             inset: 0;
             border-radius: 8px;
-            background: var(--gooey-pill, #efefef);
+            background: var(--gooey-pill, #f7f3fb);
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;

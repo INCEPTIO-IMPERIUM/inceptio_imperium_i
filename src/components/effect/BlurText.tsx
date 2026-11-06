@@ -1,4 +1,4 @@
-import { motion, type Transition, type Easing } from 'motion/react';
+import { motion, useReducedMotion, type Transition, type Easing } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
 type BlurTextProps = {
@@ -14,6 +14,8 @@ type BlurTextProps = {
   easing?: Easing | Easing[];
   onAnimationComplete?: () => void;
   stepDuration?: number;
+  /** Extra class per word/letter, e.g. a gradient on the closing words. */
+  segmentClassName?: (index: number, count: number) => string | undefined;
 };
 
 const buildKeyframes = (
@@ -41,7 +43,8 @@ const BlurText: React.FC<BlurTextProps> = ({
   animationTo,
   easing = (t: number) => t,
   onAnimationComplete,
-  stepDuration = 0.35
+  stepDuration = 0.35,
+  segmentClassName
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
@@ -80,8 +83,10 @@ const BlurText: React.FC<BlurTextProps> = ({
     [direction]
   );
 
-  const fromSnapshot = animationFrom ?? defaultFrom;
-  const toSnapshots = animationTo ?? defaultTo;
+  // Reduced motion: words still arrive, but by fading alone — no travel, no blur.
+  const reduceMotion = useReducedMotion();
+  const fromSnapshot = reduceMotion ? { opacity: 0 } : (animationFrom ?? defaultFrom);
+  const toSnapshots = reduceMotion ? [{ opacity: 1 }] : (animationTo ?? defaultTo);
 
   const stepCount = toSnapshots.length + 1;
   const totalDuration = stepDuration * (stepCount - 1);
@@ -106,6 +111,7 @@ const BlurText: React.FC<BlurTextProps> = ({
             animate={inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
             onAnimationComplete={index === elements.length - 1 ? onAnimationComplete : undefined}
+            className={segmentClassName?.(index, elements.length)}
             style={{
               display: 'inline-block',
               willChange: 'transform, filter, opacity'

@@ -293,8 +293,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
             backdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
             WebkitBackdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
             border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.2),
-                        0 2px 16px 0 rgba(31, 38, 135, 0.1),
+            boxShadow: `0 8px 32px 0 rgba(9, 7, 12, 0.2),
+                        0 2px 16px 0 rgba(9, 7, 12, 0.1),
                         inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
                         inset 0 -1px 0 0 rgba(255, 255, 255, 0.2)`
           };
@@ -307,8 +307,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     'relative flex items-center justify-center overflow-hidden transition-opacity duration-[260ms] ease-out';
 
   const focusVisibleClasses = isDarkMode
-    ? 'focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2'
-    : 'focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2';
+    ? 'focus-visible:outline-2 focus-visible:outline-[#A879FF] focus-visible:outline-offset-2'
+    : 'focus-visible:outline-2 focus-visible:outline-[#A879FF] focus-visible:outline-offset-2';
 
   return (
     <div
